@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import { Schema, model } from "mongoose";
 import config from "../../config";
-import { ISignup, IUserMethod } from "./auth.interface";
+import { IUser, IUserMethod } from "./user.interface";
 
-const userSchema = new Schema<ISignup>(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -36,4 +36,4 @@ userSchema.pre("save", async function (next) {
   );
 });
 
-export const UserModel = model<ISignup, IUserMethod>("user", userSchema);
+export const UserModel = model<IUser, IUserMethod>("user", userSchema);

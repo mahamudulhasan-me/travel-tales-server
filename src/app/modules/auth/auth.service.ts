@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import config from "../../config";
 import AppError from "../../errors/AppError";
-import { ILogin, ISignup } from "./auth.interface";
-import { UserModel } from "./auth.model";
+import { IUser } from "../user/user.interface";
+import { UserModel } from "../user/user.model";
+import { ILogin } from "./auth.interface";
 
-const signupUser = async (payload: ISignup) => {
+const signupUser = async (payload: IUser) => {
   const { email, role } = payload;
 
   const user = await UserModel.isUserExist(email);
@@ -44,7 +45,7 @@ const loginUser = async (payload: ILogin) => {
   const jwtToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: "1d",
   });
-  
+
   return { token: jwtToken, user };
 };
 
