@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IService } from "./service.interface";
 
 const serviceSchema = new Schema<IService>({
@@ -7,4 +7,8 @@ const serviceSchema = new Schema<IService>({
   price: { type: Number, required: true },
   duration: { type: Number, required: true },
   isDeleted: { type: Boolean, default: false },
+},{
+  timestamps: true
 });
+
+export const ServiceModel = model<IService>("service", serviceSchema);
