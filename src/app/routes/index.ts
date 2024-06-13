@@ -4,7 +4,7 @@ import { AuthRouters } from "../modules/auth/auth.route";
 const router = Router();
 const moduleRouters = [
   {
-    path: "/route",
+    path: "/auth",
     route: AuthRouters,
   },
 ];
