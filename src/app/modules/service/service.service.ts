@@ -15,6 +15,18 @@ const createService = async (user: JwtPayload, payload: IService) => {
   return createdService;
 };
 
+const getServices = async () => {
+  const services = await ServiceModel.find();
+  return services;
+};
+
+const getServiceById = async (id: string) => {
+  const service = await ServiceModel.findById(id);
+  return service;
+};
+
 export const ServiceServices = {
   createService,
+  getServices,
+  getServiceById,
 };

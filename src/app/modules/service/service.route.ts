@@ -7,6 +7,9 @@ import { ZodCreateServiceValidationSchema } from "./service.validation";
 
 const router = Router();
 
+router.get("/", ServiceControllers.getServices);
+router.get("/:id", ServiceControllers.getServiceById);
+
 router.post(
   "/",
   auth(USER_ROLE.admin),
