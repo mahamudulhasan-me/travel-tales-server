@@ -16,7 +16,7 @@ const createService = async (user: JwtPayload, payload: IService) => {
 };
 
 const getServices = async () => {
-  const services = await ServiceModel.find();
+  const services = await ServiceModel.find({ isDeleted: false });
   return services;
 };
 
@@ -25,8 +25,31 @@ const getServiceById = async (id: string) => {
   return service;
 };
 
+const updateService = async (id: string, payload: IService) => {
+  const service = await ServiceModel.findById(id);
+  if (!service) {
+    throw new AppError(404, "Service not found");
+  }
+  service.set(payload);
+  await service.save();
+  return service;
+};
+
+const deleteService = async (id: string) => {
+  const service = await ServiceModel.findById(id);
+
+  if (!service) {
+    throw new AppError(404, "Service not found");
+  }
+  service.isDeleted = true;
+  await service.save();
+  return service;
+};
+
 export const ServiceServices = {
   createService,
   getServices,
   getServiceById,
+  updateService,
+  deleteService,
 };

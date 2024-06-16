@@ -16,5 +16,6 @@ router.post(
   validRequestHandler(ZodCreateServiceValidationSchema),
   ServiceControllers.createService
 );
-
+router.put("/:id", auth(USER_ROLE.admin), ServiceControllers.updateService);
+router.delete("/:id", auth(USER_ROLE.admin), ServiceControllers.deleteService);
 export const ServiceRouters = router;

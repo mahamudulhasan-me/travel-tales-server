@@ -39,8 +39,35 @@ const getServiceById = asyncHandler(async (req, res, next) => {
   });
 });
 
+const updateService = asyncHandler(async (req, res, next) => {
+  const updatedService = await ServiceServices.updateService(
+    req.params.id,
+    req.body
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Service updated successfully",
+    data: updatedService,
+  });
+});
+
+const deleteService = asyncHandler(async (req, res, next) => {
+  const deletedService = await ServiceServices.deleteService(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Service deleted successfully",
+    data: deletedService,
+  });
+});
+
 export const ServiceControllers = {
   createService,
   getServices,
   getServiceById,
+  updateService,
+  deleteService,
 };
