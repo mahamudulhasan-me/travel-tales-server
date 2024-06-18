@@ -2,6 +2,7 @@ import { Router } from "express";
 import auth from "../../middlewares/auth";
 import validRequestHandler from "../../middlewares/validRequestHandler";
 import { USER_ROLE } from "../../utils/const";
+import { SlotControllers } from "../slot/slot.controller";
 import { ServiceControllers } from "./service.controller";
 import { ZodCreateServiceValidationSchema } from "./service.validation";
 
@@ -18,4 +19,7 @@ router.post(
 );
 router.put("/:id", auth(USER_ROLE.admin), ServiceControllers.updateService);
 router.delete("/:id", auth(USER_ROLE.admin), ServiceControllers.deleteService);
+
+router.post("/slot", SlotControllers.createSlot);
+
 export const ServiceRouters = router;
