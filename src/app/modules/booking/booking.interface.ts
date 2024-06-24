@@ -1,6 +1,8 @@
 import { ObjectId } from "mongoose";
 
 export interface IBooking {
+  [x: string]: any;
+  _id?: ObjectId;
   service: ObjectId;
   slot: ObjectId;
   customer: ObjectId;

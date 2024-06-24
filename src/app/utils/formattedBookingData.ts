@@ -5,19 +5,19 @@ export const formattedBookingData = (
   const formatBooking = (booking: any) => ({
     _id: booking?._id,
     service: {
-      _id: booking?.serviceId?._id,
-      name: booking?.serviceId?.name,
-      description: booking?.serviceId?.description,
-      price: booking?.serviceId?.price,
-      duration: booking?.serviceId?.duration,
-      isDeleted: booking?.serviceId?.isDeleted,
+      _id: booking?.service?._id,
+      name: booking?.service?.name,
+      description: booking?.service?.description,
+      price: booking?.service?.price,
+      duration: booking?.service?.duration,
+      isDeleted: booking?.service?.isDeleted,
     },
     slot: {
-      _id: booking?.slotId?._id,
-      date: booking?.slotId?.date,
-      startTime: booking?.slotId?.startTime,
-      endTime: booking?.slotId?.endTime,
-      isBooked: booking?.slotId?.isBooked,
+      _id: booking?.slot?._id,
+      date: booking?.slot?.date,
+      startTime: booking?.slot?.startTime,
+      endTime: booking?.slot?.endTime,
+      isBooked: booking?.slot?.isBooked,
     },
     ...(includeCustomer && {
       customer: {

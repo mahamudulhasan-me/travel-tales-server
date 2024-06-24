@@ -1,6 +1,7 @@
 import { Model, ObjectId } from "mongoose";
 
 export interface ISlot {
+  _id?: ObjectId;
   service: ObjectId;
   date: Date;
   startTime: string;

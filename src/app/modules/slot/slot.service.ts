@@ -59,7 +59,7 @@ const getAvailableSlots = async ({
   const query: any = { isBooked: "available" };
 
   if (date) query.date = date;
-  if (serviceId) query.serviceId = serviceId;
+  if (serviceId) query.service = serviceId;
 
   const slots = await SlotModel.find(query).populate({
     path: "service",

@@ -37,11 +37,9 @@ const bookings = async () => {
 const createBooking = async (payload: IBooking, user: JwtPayload) => {
   const session = await startSession();
   session.startTransaction();
+
   try {
-    // Destructure payload
     const {
-      service: serviceId,
-      slot: slotId,
       vehicleType,
       vehicleBrand,
       vehicleModel,
@@ -50,20 +48,32 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     } = payload;
 
     // Fetch service and slot details
-    const service = await ServiceModel.findById(serviceId).session(session);
-    const slot = await SlotModel.findById(slotId).session(session);
+    const service = await ServiceModel.findById(payload?.serviceId).session(
+      session
+    );
+    const slot = await SlotModel.findById(payload?.slotId).session(session);
+
+    // Ensure service and slot exist
+    if (!service) {
+      throw new AppError(404, "Service not found");
+    }
+    if (!slot) {
+      throw new AppError(404, "Slot not found");
+    }
 
     // Find booked user
     const bookedUser = await UserModel.findOne({ email: user.email });
 
     if (!bookedUser) {
-      throw new Error("User not found");
+      throw new AppError(404, "User not found");
     }
 
     // Update slot to booked status
-    if (slot?.isBooked === "available") {
-      await SlotModel.findByIdAndUpdate(slotId, { isBooked: "booked" }).session(
-        session
+    if (slot.isBooked === "available") {
+      await SlotModel.findByIdAndUpdate(
+        slot._id,
+        { isBooked: "booked" },
+        { session }
       );
     } else {
       throw new AppError(400, "Slot already booked");
@@ -71,8 +81,8 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 
     // Create booking
     const bookingData = {
-      serviceId: service?._id,
-      slotId: slot?._id,
+      service: service._id,
+      slot: slot._id,
       customer: bookedUser._id,
       vehicleType,
       vehicleBrand,
@@ -86,19 +96,21 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     });
 
     await session.commitTransaction();
+
     // Populate service and slot information
-    const populatedBooking = (await BookingModel.findById(createdBooking[0]._id)
+    const populatedBooking = await BookingModel.findById(createdBooking[0]._id)
       .populate("service")
       .populate("slot")
       .populate("customer")
-      .exec()) as any;
+      .exec();
 
-    // Construct formatted response
+    console.log(populatedBooking);
+
+    // Return formatted response
     const formattedData = formattedBookingData(populatedBooking);
     return formattedData;
   } catch (error) {
     await session.abortTransaction();
-
     throw error;
   } finally {
     session.endSession();
