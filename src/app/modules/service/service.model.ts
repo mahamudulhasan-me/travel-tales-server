@@ -15,8 +15,8 @@ const serviceSchema = new Schema<IService>(
   }
 );
 
-serviceSchema.statics.getServiceById = async function (id: ObjectId | string) {
-  const service = await ServiceModel.findById(id);
+serviceSchema.statics.getServiceById = async function (id: string | ObjectId) {
+  const service = await ServiceModel.findOne({ _id: id, isDeleted: false });
   if (!service) {
     throw new AppError(404, "Service not found");
   }

@@ -21,8 +21,8 @@ const getServices = async () => {
   return services;
 };
 
-const getServiceById = async (id: ObjectId) => {
-  const service = await ServiceModel.getServiceById(id);
+const getServiceById = async (id: string | ObjectId) => {
+  const service = await ServiceModel.getServiceById(id as ObjectId);
   return service;
 };
 
