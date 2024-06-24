@@ -22,7 +22,7 @@ const signupUser = async (payload: IUser) => {
 const loginUser = async (payload: ILogin) => {
   const { email, password } = payload;
 
-  const user = await UserModel.isUserExist(email);
+  const user = await UserModel.findOne({ email }).select("+password").exec();
 
   if (!user) {
     throw new AppError(404, "User not found");
@@ -46,7 +46,10 @@ const loginUser = async (payload: ILogin) => {
     expiresIn: "1d",
   });
 
-  return { token: jwtToken, user };
+  // Omit password from the user object before returning
+  const { password: _, ...userWithoutPassword } = user.toObject() as IUser;
+
+  return { token: jwtToken, user: userWithoutPassword };
 };
 
 export const AuthServices = {
