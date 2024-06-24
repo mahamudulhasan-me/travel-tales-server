@@ -5,12 +5,11 @@ import { startSession } from "mongoose";
 import AppError from "../../errors/AppError";
 import { formattedBookingData } from "../../utils/formattedBookingData";
 import { SlotModel } from "../slot/sot.model";
-import { UserModel } from "../user/user.model"; // Assuming UserModel for customer retrieval
+import { UserModel } from "../user/user.model";
 import { IBooking } from "./booking.interface";
 import { BookingModel } from "./booking.model";
 
 const bookingByUser = async (user: JwtPayload) => {
-  console.log(user);
   const isExitUser = await UserModel.findOne({ email: user.email });
 
   if (!isExitUser) {
@@ -18,8 +17,8 @@ const bookingByUser = async (user: JwtPayload) => {
   }
 
   const bookings = await BookingModel.find({ customer: isExitUser._id })
-    .populate({ path: "serviceId" })
-    .populate({ path: "slotId" })
+    .populate({ path: "service" })
+    .populate({ path: "slot" })
     .exec();
 
   return formattedBookingData(bookings, false);
@@ -27,8 +26,8 @@ const bookingByUser = async (user: JwtPayload) => {
 
 const bookings = async () => {
   const bookings = await BookingModel.find()
-    .populate({ path: "serviceId" })
-    .populate({ path: "slotId" })
+    .populate({ path: "service" })
+    .populate({ path: "slot" })
     .populate({ path: "customer" })
     .exec();
 
@@ -41,8 +40,8 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
   try {
     // Destructure payload
     const {
-      serviceId,
-      slotId,
+      service: serviceId,
+      slot: slotId,
       vehicleType,
       vehicleBrand,
       vehicleModel,
@@ -89,8 +88,8 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     await session.commitTransaction();
     // Populate service and slot information
     const populatedBooking = (await BookingModel.findById(createdBooking[0]._id)
-      .populate("serviceId")
-      .populate("slotId")
+      .populate("service")
+      .populate("slot")
       .populate("customer")
       .exec()) as any;
 

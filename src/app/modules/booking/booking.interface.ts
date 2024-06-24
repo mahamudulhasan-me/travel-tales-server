@@ -1,8 +1,8 @@
-import { Model, ObjectId } from "mongoose";
+import { ObjectId } from "mongoose";
 
 export interface IBooking {
-  serviceId: ObjectId;
-  slotId: ObjectId;
+  service: ObjectId;
+  slot: ObjectId;
   customer: ObjectId;
   vehicleType: string;
   vehicleBrand: string;

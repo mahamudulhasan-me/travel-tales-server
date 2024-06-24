@@ -1,24 +1,41 @@
 import { Schema, model } from "mongoose";
 import { IBooking } from "./booking.interface";
+export const vehicleTypes = [
+  "car",
+  "truck",
+  "SUV",
+  "van",
+  "motorcycle",
+  "bus",
+  "electricVehicle",
+  "hybridVehicle",
+  "bicycle",
+  "tractor",
+];
 
 const bookingSchema = new Schema<IBooking>(
   {
-    serviceId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "service",
-    },
-    slotId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "slot",
-    },
     customer: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "user",
     },
-    vehicleType: { type: String, required: true },
+    service: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "service",
+    },
+    slot: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "slot",
+    },
+
+    vehicleType: {
+      type: String,
+      required: true,
+      enum: vehicleTypes,
+    },
     vehicleBrand: { type: String, required: true },
     vehicleModel: { type: String, required: true },
     manufacturingYear: { type: Number, required: true },

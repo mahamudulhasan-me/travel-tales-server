@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { vehicleTypes } from "./booking.model";
 
 export const ZodCreateBookingSchema = z.object({
   body: z.object({
@@ -10,7 +11,7 @@ export const ZodCreateBookingSchema = z.object({
       required_error: "Slot id is required",
       invalid_type_error: "Slot id must be a string",
     }),
-    vehicleType: z.string({
+    vehicleType: z.enum([...vehicleTypes] as [string, ...string[]], {
       required_error: "Vehicle type is required",
       invalid_type_error: "Vehicle type must be a string",
     }),
