@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 export interface IService {
   name: string;
@@ -9,5 +9,5 @@ export interface IService {
 }
 
 export interface IServiceMethod extends Model<IService> {
-  getServiceById(id: string): Promise<IService>;
+  getServiceById(id: ObjectId): Promise<IService>;
 }

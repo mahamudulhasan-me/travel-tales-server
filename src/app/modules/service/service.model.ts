@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { ObjectId, Schema, model } from "mongoose";
 import AppError from "../../errors/AppError";
 import { IService, IServiceMethod } from "./service.interface";
 
@@ -15,7 +15,7 @@ const serviceSchema = new Schema<IService>(
   }
 );
 
-serviceSchema.statics.getServiceById = async function (id: string) {
+serviceSchema.statics.getServiceById = async function (id: ObjectId | string) {
   const service = await ServiceModel.findById(id);
   if (!service) {
     throw new AppError(404, "Service not found");

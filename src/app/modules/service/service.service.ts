@@ -1,4 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
+import { ObjectId } from "mongoose";
 import AppError from "../../errors/AppError";
 import { UserModel } from "../user/user.model";
 import { IService } from "./service.interface";
@@ -20,7 +21,7 @@ const getServices = async () => {
   return services;
 };
 
-const getServiceById = async (id: string) => {
+const getServiceById = async (id: ObjectId) => {
   const service = await ServiceModel.getServiceById(id);
   return service;
 };

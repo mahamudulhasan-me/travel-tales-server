@@ -20,6 +20,6 @@ router.post(
 router.put("/:id", auth(USER_ROLE.admin), ServiceControllers.updateService);
 router.delete("/:id", auth(USER_ROLE.admin), ServiceControllers.deleteService);
 
-router.post("/slot", SlotControllers.createSlot);
+router.post("/slot", auth(USER_ROLE.admin), SlotControllers.createSlot);
 
 export const ServiceRouters = router;

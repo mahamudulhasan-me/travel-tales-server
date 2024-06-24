@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 export interface ISlot {
   service: ObjectId;
@@ -6,4 +6,8 @@ export interface ISlot {
   startTime: string;
   endTime: string;
   isBooked: string;
+}
+
+export interface ISlotMethod extends Model<ISlot> {
+  getSlotById(id: ObjectId): Promise<ISlot>;
 }
