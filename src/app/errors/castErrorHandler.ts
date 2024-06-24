@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { TErrorSources, TGenericErrorResponse } from "../interfaces/error";
+import { TErrorMessage, TGenericErrorResponse } from "../interfaces/error";
 
 const castErrorHandler = (
   error: mongoose.Error.CastError
 ): TGenericErrorResponse => {
-  const errorSources: TErrorSources = [
+  const errorMessage: TErrorMessage = [
     {
       path: error.path,
       message: error.message,
@@ -12,8 +12,8 @@ const castErrorHandler = (
   ];
   return {
     statusCode: 400,
-    message: "Invalid Unique Identifier",
-    errorSources,
+    message: "Cast Error",
+    errorMessage,
   };
 };
 

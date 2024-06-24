@@ -1,4 +1,4 @@
-import { TGenericErrorResponse } from "../interfaces/error";
+import { TErrorMessage, TGenericErrorResponse } from "../interfaces/error";
 
 const duplicateKeyErrorHandler = (error: any): TGenericErrorResponse => {
   const errorResponse = error?.errorResponse;
@@ -9,7 +9,7 @@ const duplicateKeyErrorHandler = (error: any): TGenericErrorResponse => {
 
   const message = errorResponse.errmsg;
 
-  const errorSources = [
+  const errorMessage: TErrorMessage = [
     {
       path: path,
       message: message,
@@ -17,8 +17,8 @@ const duplicateKeyErrorHandler = (error: any): TGenericErrorResponse => {
   ];
   return {
     statusCode: 400,
-    message: "Duplicate Key Error",
-    errorSources,
+    message: "Duplicate Entry",
+    errorMessage,
   };
 };
 

@@ -11,18 +11,18 @@ const auth = (...roles: TUserRole[]): RequestHandler => {
       const token = req.headers.authorization?.split(" ")[1];
 
       if (!token) {
-        throw new AppError(401, "Unauthorized access");
+        throw new AppError(401, "You have no access to this route");
       }
 
       jwt.verify(token, config.jwt_access_secret as string, (err, user) => {
         if (err) {
-          throw new AppError(401, "Unauthorized access");
+          throw new AppError(401, "You have no access to this route");
         }
 
         const { role } = user as JwtPayload;
 
         if (role && !roles.includes(role)) {
-          throw new AppError(401, "Unauthorized access");
+          throw new AppError(401, "You have no access to this route");
         }
 
         req.user = user as JwtPayload;
