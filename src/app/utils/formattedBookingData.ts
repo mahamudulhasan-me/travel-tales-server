@@ -1,4 +1,7 @@
-export const formattedBookingData = (data: any) => {
+export const formattedBookingData = (
+  data: any,
+  includeCustomer: boolean = true
+) => {
   const formatBooking = (booking: any) => ({
     _id: booking?._id,
     service: {
@@ -16,13 +19,15 @@ export const formattedBookingData = (data: any) => {
       endTime: booking?.slotId?.endTime,
       isBooked: booking?.slotId?.isBooked,
     },
-    customer: {
-      _id: booking?.customer?._id,
-      name: booking?.customer?.name,
-      email: booking?.customer?.email,
-      phone: booking?.customer?.phone,
-      address: booking?.customer?.address,
-    },
+    ...(includeCustomer && {
+      customer: {
+        _id: booking?.customer?._id,
+        name: booking?.customer?.name,
+        email: booking?.customer?.email,
+        phone: booking?.customer?.phone,
+        address: booking?.customer?.address,
+      },
+    }),
     vehicleType: booking.vehicleType,
     vehicleBrand: booking.vehicleBrand,
     vehicleModel: booking.vehicleModel,

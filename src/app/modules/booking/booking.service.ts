@@ -9,6 +9,22 @@ import { UserModel } from "../user/user.model"; // Assuming UserModel for custom
 import { IBooking } from "./booking.interface";
 import { BookingModel } from "./booking.model";
 
+const bookingByUser = async (user: JwtPayload) => {
+  console.log(user);
+  const isExitUser = await UserModel.findOne({ email: user.email });
+
+  if (!isExitUser) {
+    throw new AppError(404, "This user don't exit");
+  }
+
+  const bookings = await BookingModel.find({ customer: isExitUser._id })
+    .populate({ path: "serviceId" })
+    .populate({ path: "slotId" })
+    .exec();
+
+  return formattedBookingData(bookings, false);
+};
+
 const bookings = async () => {
   const bookings = await BookingModel.find()
     .populate({ path: "serviceId" })
@@ -92,4 +108,5 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 export const BookingServices = {
   createBooking,
   bookings,
+  bookingByUser,
 };

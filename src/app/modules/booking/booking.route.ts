@@ -7,6 +7,11 @@ import { ZodCreateBookingSchema } from "./booking.validation";
 
 const router = Router();
 
+router.get(
+  "/my-bookings",
+  auth(USER_ROLE.user),
+  BookingControllers.bookingByUser
+);
 router.get("/", auth(USER_ROLE.admin), BookingControllers.bookings);
 
 router.post(
