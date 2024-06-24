@@ -3,6 +3,16 @@ import asyncHandler from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { BookingServices } from "./booking.service";
 
+const bookings = asyncHandler(async (req, res, next) => {
+  const bookings = await BookingServices.bookings();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "All bookings retrieved successfully",
+    data: bookings,
+  });
+});
+
 const createBooking = asyncHandler(async (req, res, next) => {
   const user = req.user as JwtPayload;
   const createdBooking = await BookingServices.createBooking(req.body, user);
@@ -17,4 +27,5 @@ const createBooking = asyncHandler(async (req, res, next) => {
 
 export const BookingControllers = {
   createBooking,
+  bookings,
 };

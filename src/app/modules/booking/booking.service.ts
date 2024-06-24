@@ -3,10 +3,21 @@ import { ServiceModel } from "../service/service.model";
 
 import { startSession } from "mongoose";
 import AppError from "../../errors/AppError";
+import { formattedBookingData } from "../../utils/formattedBookingData";
 import { SlotModel } from "../slot/sot.model";
 import { UserModel } from "../user/user.model"; // Assuming UserModel for customer retrieval
 import { IBooking } from "./booking.interface";
 import { BookingModel } from "./booking.model";
+
+const bookings = async () => {
+  const bookings = await BookingModel.find()
+    .populate({ path: "serviceId" })
+    .populate({ path: "slotId" })
+    .populate({ path: "customer" })
+    .exec();
+
+  return formattedBookingData(bookings);
+};
 
 const createBooking = async (payload: IBooking, user: JwtPayload) => {
   const session = await startSession();
@@ -68,38 +79,7 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
       .exec()) as any;
 
     // Construct formatted response
-    const formattedData = {
-      _id: populatedBooking?._id,
-      service: {
-        _id: populatedBooking?.serviceId?._id,
-        name: populatedBooking?.serviceId?.name,
-        description: populatedBooking?.serviceId?.description,
-        price: populatedBooking?.serviceId?.price,
-        duration: populatedBooking?.serviceId?.duration,
-        isDeleted: populatedBooking?.serviceId?.isDeleted,
-      },
-      slot: {
-        _id: populatedBooking?.slotId?._id,
-        date: populatedBooking?.slotId?.date,
-        startTime: populatedBooking?.slotId?.startTime,
-        endTime: populatedBooking?.slotId?.endTime,
-        isBooked: populatedBooking?.slotId?.isBooked,
-      },
-      customer: {
-        _id: populatedBooking?.customer?._id,
-        name: populatedBooking?.customer?.name,
-        email: populatedBooking?.customer?.email,
-        phone: populatedBooking?.customer?.phone,
-        address: populatedBooking?.customer?.address,
-      },
-      vehicleType,
-      vehicleBrand,
-      vehicleModel,
-      manufacturingYear,
-      registrationPlate,
-      createdAt: populatedBooking?.createdAt,
-      updatedAt: populatedBooking?.updatedAt,
-    };
+    const formattedData = formattedBookingData(populatedBooking);
     return formattedData;
   } catch (error) {
     await session.abortTransaction();
@@ -111,4 +91,5 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 };
 export const BookingServices = {
   createBooking,
+  bookings,
 };
