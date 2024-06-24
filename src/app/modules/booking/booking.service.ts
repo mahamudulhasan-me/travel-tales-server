@@ -104,8 +104,6 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
       .populate("customer")
       .exec();
 
-    console.log(populatedBooking);
-
     // Return formatted response
     const formattedData = formattedBookingData(populatedBooking);
     return formattedData;
