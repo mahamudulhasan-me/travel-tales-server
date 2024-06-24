@@ -1,121 +1,111 @@
-# Express-TS-Mongoose-Starter
+# Car Wash Booking System
 
-A starter project to quickly start developing RESTful APIs using Express, TypeScript, and Mongoose.
+## Table of Contents
+
+- [Overview](#overview)
+- [Live Demo](#live-demo)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Error Handling](#error-handling)
+- [Authentication & Authorization](#authentication--authorization)
+- [Future Improvements](#future-improvements)
+- [License](#license)
+
+## Overview
+
+The Car Wash Booking System is a backend application built to facilitate the booking of car wash services online. It allows users to sign up, log in, view available services, book appointments, and manage bookings. Admins have additional functionalities such as managing services, slots, and user accounts.
+
+## Live Demo
+
+You can find a live demo of the application at [link-to-your-live-demo](https://www.example.com).
 
 ## Features
 
-- **Express**: Fast, unopinionated, minimalist web framework for Node.js.
-- **TypeScript**: Typed superset of JavaScript that compiles to plain JavaScript.
-- **Mongoose**: Elegant MongoDB object modeling for Node.js.
-- **Zod**: TypeScript-first schema declaration and validation library.
+- **User Management:**
+  - User registration and authentication using JWT.
+  - Separate roles for admin and regular users.
+- **Service Management:**
+  - CRUD operations for car wash services.
+  - Admin-only access to manage services.
+- **Booking Management:**
+  - Users can view available slots and book appointments.
+  - Admins can manage slots and bookings.
+- **Data Management:**
+  - MongoDB used as the database with Mongoose ODM.
+  - Transactions for ensuring data consistency.
+- **Security:**
+  - JWT-based authentication and authorization.
+  - Input validation and error handling.
+- **API Documentation:**
+  - Detailed documentation of API endpoints (see [API Documentation](#api-documentation)).
 
-## Getting Started
+## Technologies Used
 
-### Prerequisites
+- **Backend:**
+  - Node.js
+  - Express.js
+  - TypeScript
+  - MongoDB
+  - Mongoose
+- **Security:**
+  - JSON Web Tokens (JWT)
+  - bcrypt.js (for password hashing)
+- **Development Tools:**
+  - Git & GitHub
+  - Postman (for API testing)
+  - VS Code
 
-Ensure you have the following installed:
+## Installation
 
-- [Node.js](https://nodejs.org/) (v14.x or higher)
-- [npm](https://www.npmjs.com/) (v6.x or higher) or [yarn](https://yarnpkg.com/) (v1.x or higher)
-- [MongoDB](https://www.mongodb.com/) (local or Atlas)
-
-### Installation
-
-1. **Clone the repository:**
+1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/express-ts-mongoose-starter.git
-   cd express-ts-mongoose-starter
+   git clone https://github.com/mahamudulhasan-me/car-washing-system.git
    ```
 
-2. **Install dependencies:**
-
+2. Navigate to the project directory:
+   ```bash
+   cd car-wash-booking-system
+   ```
+3. Install dependencies:
    ```bash
    npm install
-   # or
-   yarn install
    ```
-
-3. **Set up environment variables:**
-
-   Create a `.env` file in the root directory and add the following:
-
-   ```env
-   PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/yourdbname
-   ```
-
-### Running the Application
-
-1. **Start the development server:**
-
+4. Set up environment variables:
+   - Create a `.env` file in the root directory.
+   - Add the following environment variables:
+     ```plaintext
+     MONGODB_URI=your-mongodb-uri
+     JWT_SECRET=your-jwt-secret
+     ```
+5. Start the server:
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
-2. **Build the project:**
+## Usage
 
-   ```bash
-   npm run build
-   # or
-   yarn build
-   ```
+- Use a tool like Postman to test the API endpoints.
+- Sign up a new user, log in to receive a JWT token, and use it to authenticate requests.
+- Admin users can create, update, and delete services and slots.
 
-3. **Run the production server:**
+## Error Handling
 
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
+The application includes middleware for error handling. It ensures proper validation and responses for various errors such as validation errors, authentication errors, and server errors.
 
-### Project Structure
+## Authentication & Authorization
 
-```
+- JWT is used for authentication.
+- Routes are protected based on user roles (`admin` or `user`).
 
-express-ts-mongoose-starter/
-├── src/
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── middlewares/
-│ ├── services/
-│ ├── app.ts
-│ └── server.ts
-├── tests/
-├── .env
-├── .gitignore
-├── package.json
-├── tsconfig.json
-├── tslint.json
-└── README.md
-```
+## Future Improvements
 
-- **`src/`**: Contains the source code for the application.
-  - **`controllers/`**: Defines the request handlers.
-  - **`models/`**: Mongoose schemas and models.
-  - **`routes/`**: Application routes.
-  - **`middlewares/`**: Custom Express middlewares.
-  - **`services/`**: Business logic and services.
-  - **`app.ts`**: Initializes the Express application.
-  - **`server.ts`**: Starts the server.
+- Add frontend interface for a better user experience.
+- Implement email notifications for booking confirmations and updates.
+- Enhance security features such as rate limiting and logging.
 
-### Scripts
+## License
 
-- **`dev`**: Runs the development server with hot-reloading.
-- **`start`**: Runs the production server.
-- **`prod`**: Alias for `start`.
-- **`lint`**: Lints the project using ESLint.
-- **`build`**: Compiles TypeScript to JavaScript.
-- **`lint:fix`**: Fixes linting errors automatically.
-- **`test`**: Placeholder for adding test scripts.
-
-### License
-
-This project is licensed under the ISC License.
-
-### Author
-
-[Mahamudul Hasan](https://github.com/yourusername)
+This project is licensed under the [MIT License](LICENSE).
