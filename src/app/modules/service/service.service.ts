@@ -6,7 +6,7 @@ import { IService } from "./service.interface";
 import { ServiceModel } from "./service.model";
 
 const createService = async (user: JwtPayload, payload: IService) => {
-  const { role, email } = user;
+  const { email } = user;
   const isUserExist = await UserModel.isUserExist(email);
 
   if (!isUserExist) {
@@ -17,7 +17,9 @@ const createService = async (user: JwtPayload, payload: IService) => {
 };
 
 const getServices = async () => {
-  const services = await ServiceModel.find({ isDeleted: false });
+  const services = await ServiceModel.find({ isDeleted: false }).sort({
+    createdAt: -1,
+  });
   return services;
 };
 

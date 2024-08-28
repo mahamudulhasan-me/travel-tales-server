@@ -3,7 +3,7 @@ import asyncHandler from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { ServiceServices } from "./service.service";
 
-const createService = asyncHandler(async (req, res, next) => {
+const createService = asyncHandler(async (req, res) => {
   const createdService = await ServiceServices.createService(
     req.user as JwtPayload,
     req.body
@@ -17,7 +17,7 @@ const createService = asyncHandler(async (req, res, next) => {
   });
 });
 
-const getServices = asyncHandler(async (req, res, next) => {
+const getServices = asyncHandler(async (req, res) => {
   const services = await ServiceServices.getServices();
 
   sendResponse(res, {
@@ -28,7 +28,7 @@ const getServices = asyncHandler(async (req, res, next) => {
   });
 });
 
-const getServiceById = asyncHandler(async (req, res, next) => {
+const getServiceById = asyncHandler(async (req, res) => {
   const service = await ServiceServices.getServiceById(req.params.id);
 
   sendResponse(res, {
@@ -39,7 +39,7 @@ const getServiceById = asyncHandler(async (req, res, next) => {
   });
 });
 
-const updateService = asyncHandler(async (req, res, next) => {
+const updateService = asyncHandler(async (req, res) => {
   const updatedService = await ServiceServices.updateService(
     req.params.id,
     req.body
@@ -53,7 +53,7 @@ const updateService = asyncHandler(async (req, res, next) => {
   });
 });
 
-const deleteService = asyncHandler(async (req, res, next) => {
+const deleteService = asyncHandler(async (req, res) => {
   const deletedService = await ServiceServices.deleteService(req.params.id);
 
   sendResponse(res, {
