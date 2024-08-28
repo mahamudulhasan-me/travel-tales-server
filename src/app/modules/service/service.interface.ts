@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { Model, ObjectId } from "mongoose";
 
 export interface IService {
   _id?: ObjectId;
   name: string;
   description: string;
+  coverImage: string;
   price: number;
   duration: number;
   isDeleted: boolean;
