@@ -28,7 +28,7 @@ userSchema.statics.isMatchPassword = async function (
   return await bcrypt.compare(plainPassword, hashPassword);
 };
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   const user = this;
   this.password = await bcrypt.hash(
     user.password,

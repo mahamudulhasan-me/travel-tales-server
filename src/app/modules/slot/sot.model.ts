@@ -12,7 +12,8 @@ const slotSchema = new Schema<ISlot>(
     date: { type: Date, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
-    isBooked: { type: String, required: true, default: "available" },
+    isBooked: { type: Boolean, required: true, default: false },
+    status: { type: String, required: true, default: "available" },
   },
   {
     timestamps: true,

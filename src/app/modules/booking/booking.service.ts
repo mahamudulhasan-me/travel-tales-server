@@ -19,6 +19,7 @@ const bookingByUser = async (user: JwtPayload) => {
   const bookings = await BookingModel.find({ customer: isExitUser._id })
     .populate({ path: "service" })
     .populate({ path: "slot" })
+    .sort({ createdAt: -1 })
     .exec();
 
   return formattedBookingData(bookings, false);
@@ -69,10 +70,10 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     }
 
     // Update slot to booked status
-    if (slot.isBooked === "available") {
+    if (!slot.isBooked) {
       await SlotModel.findByIdAndUpdate(
         slot._id,
-        { isBooked: "booked" },
+        { isBooked: true },
         { session }
       );
     } else {

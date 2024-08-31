@@ -1,6 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ServiceModel } from "../service/service.model";
 import { ISlot } from "./slot.interface";
 import { SlotModel } from "./sot.model";
+
+const getSlots = async () => {
+  const slots = await SlotModel.find()
+    .sort({ createdAt: -1 })
+    .populate({ path: "service" });
+  return slots;
+};
 
 const createSlot = async (payload: ISlot) => {
   const { service: serviceId, date, startTime, endTime } = payload;
@@ -38,7 +46,8 @@ const createSlot = async (payload: ISlot) => {
       date,
       startTime: slotStartTime,
       endTime: slotEndTime,
-      isBooked: "available",
+      isBooked: false,
+      status: "available",
     };
 
     slots.push(slot);
@@ -56,7 +65,7 @@ const getAvailableSlots = async ({
   date,
   serviceId,
 }: GetAvailableSlotsParams) => {
-  const query: any = { isBooked: "available" };
+  const query: any = { isBooked: true, status: "available" };
 
   if (date) query.date = date;
   if (serviceId) query.service = serviceId;
@@ -67,7 +76,16 @@ const getAvailableSlots = async ({
   return slots;
 };
 
+const updateSlot = async (id: string, payload: ISlot) => {
+  const updatedSlot = await SlotModel.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return updatedSlot;
+};
+
 export const SlotServices = {
   createSlot,
-  getSlots: getAvailableSlots,
+  getSlots,
+  getAvailableSlots,
+  updateSlot,
 };

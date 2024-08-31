@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Model } from "mongoose";
 
 export type TUserRole = "admin" | "user";
@@ -16,5 +17,5 @@ export interface IUserMethod extends Model<IUser> {
   isMatchPassword(
     plainPassword: string,
     hashPassword: string
-  ): Promise<Boolean>;
+  ): Promise<boolean>;
 }

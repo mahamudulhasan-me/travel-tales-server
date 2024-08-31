@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Model, ObjectId } from "mongoose";
 
 export interface ISlot {
@@ -6,7 +7,8 @@ export interface ISlot {
   date: Date;
   startTime: string;
   endTime: string;
-  isBooked: string;
+  isBooked: boolean;
+  status: string;
 }
 
 export interface ISlotMethod extends Model<ISlot> {
