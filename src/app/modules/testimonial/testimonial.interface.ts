@@ -1,8 +1,8 @@
+import { ObjectId } from "mongoose";
+
 export interface ITestimonial {
-  name: string;
-  email: string;
+  user: ObjectId;
   description: string;
-  image: string;
   rating: number;
   isDeleted: boolean;
 }

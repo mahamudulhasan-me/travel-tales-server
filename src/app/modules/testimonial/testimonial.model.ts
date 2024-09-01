@@ -2,21 +2,16 @@ import { model, Schema } from "mongoose";
 import { ITestimonial } from "./testimonial.interface";
 
 const testimonialSchema = new Schema<ITestimonial>({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
     required: true,
   },
   description: {
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-  },
+
   rating: {
     type: Number,
     required: true,
