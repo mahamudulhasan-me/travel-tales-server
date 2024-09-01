@@ -6,6 +6,16 @@ import { UserController } from "./user.controller";
 const router = Router();
 
 router.get("/", auth(USER_ROLE.admin), UserController.getAllUsers);
-router.put("/:id", auth(USER_ROLE.admin), UserController.updateUser);
+router.put(
+  "/:id",
+  auth(USER_ROLE.admin || USER_ROLE.user),
+  UserController.updateUser
+);
+
+router.get(
+  "/:id",
+  auth(USER_ROLE.admin || USER_ROLE.user),
+  UserController.getUser
+);
 
 export const UserRouters = router;

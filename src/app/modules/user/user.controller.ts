@@ -24,7 +24,20 @@ const updateUser = asyncHandler(async (req, res) => {
     data: updatedUser,
   });
 });
+
+const getUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const user = await UserService.getUser(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User retrieved successfully",
+    data: user,
+  });
+});
 export const UserController = {
   getAllUsers,
   updateUser,
+  getUser,
 };

@@ -11,7 +11,12 @@ const updateUser = async (id: string, data: any) => {
   });
   return updatedUser;
 };
+const getUser = async (id: string) => {
+  const user = await UserModel.findById(id);
+  return user;
+};
 export const UserService = {
   getAllUsers,
   updateUser,
+  getUser,
 };
