@@ -83,9 +83,14 @@ const updateSlot = async (id: string, payload: ISlot) => {
   return updatedSlot;
 };
 
+const getSlotsByServiceId = async (serviceId: string) => {
+  const slots = await SlotModel.find({ service: serviceId });
+  return slots;
+};
 export const SlotServices = {
   createSlot,
   getSlots,
   getAvailableSlots,
   updateSlot,
+  getSlotsByServiceId,
 };

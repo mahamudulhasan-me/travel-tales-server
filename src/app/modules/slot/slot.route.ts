@@ -8,5 +8,5 @@ const router = Router();
 router.get("/availability", SlotControllers.getAvailableSlots);
 router.get("/", auth(USER_ROLE.admin), SlotControllers.getSlots);
 router.put("/:id", auth(USER_ROLE.admin), SlotControllers.updateSlot);
-
+router.get("/service/:serviceId", SlotControllers.getSlotsByServiceId);
 export const SlotRouters = router;

@@ -52,9 +52,21 @@ const updateSlot = asyncHandler(async (req, res) => {
     data: updatedSlot,
   });
 });
+
+const getSlotsByServiceId = asyncHandler(async (req, res) => {
+  const { serviceId } = req.params;
+  const slots = await SlotServices.getSlotsByServiceId(serviceId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Slots retrieved successfully",
+    data: slots,
+  });
+});
 export const SlotControllers = {
   createSlot,
   getSlots,
   getAvailableSlots,
   updateSlot,
+  getSlotsByServiceId,
 };
