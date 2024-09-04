@@ -4,6 +4,7 @@ import { ServiceModel } from "../service/service.model";
 import { startSession } from "mongoose";
 import AppError from "../../errors/AppError";
 import { formattedBookingData } from "../../utils/formattedBookingData";
+import { paymentInitializer } from "../payment/payment.utils";
 import { SlotModel } from "../slot/sot.model";
 import { UserModel } from "../user/user.model";
 import { IBooking } from "./booking.interface";
@@ -49,10 +50,10 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     } = payload;
 
     // Fetch service and slot details
-    const service = await ServiceModel.findById(payload?.serviceId).session(
+    const service = await ServiceModel.findById(payload?.service).session(
       session
     );
-    const slot = await SlotModel.findById(payload?.slotId).session(session);
+    const slot = await SlotModel.findById(payload?.slot).session(session);
 
     // Ensure service and slot exist
     if (!service) {
@@ -79,12 +80,15 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     } else {
       throw new AppError(400, "Slot already booked");
     }
+    const transactionId = `txn_${Math.floor(Math.random() * 10000000)}`;
 
     // Create booking
     const bookingData = {
       service: service._id,
       slot: slot._id,
       customer: bookedUser._id,
+      paymentStatus: "pending",
+      transactionId,
       vehicleType,
       vehicleBrand,
       vehicleModel,
@@ -107,7 +111,8 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 
     // Return formatted response
     const formattedData = formattedBookingData(populatedBooking);
-    return formattedData;
+    const paymentRes = await paymentInitializer();
+    return paymentRes;
   } catch (error) {
     await session.abortTransaction();
     throw error;

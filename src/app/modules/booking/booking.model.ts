@@ -25,21 +25,20 @@ const bookingSchema = new Schema<IBooking>(
       required: true,
       ref: "service",
     },
+    transactionId: { type: String, required: true },
     slot: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "slot",
     },
-
+    paymentStatus: { type: String, default: "pending" },
     vehicleType: {
       type: String,
-      required: true,
-      enum: vehicleTypes,
     },
-    vehicleBrand: { type: String, required: true },
-    vehicleModel: { type: String, required: true },
-    manufacturingYear: { type: Number, required: true },
-    registrationPlate: { type: String, required: true },
+    vehicleBrand: { type: String },
+    vehicleModel: { type: String },
+    manufacturingYear: { type: Number },
+    registrationPlate: { type: String },
   },
   {
     timestamps: true,
