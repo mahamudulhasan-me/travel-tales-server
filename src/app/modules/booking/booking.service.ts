@@ -50,16 +50,16 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     } = payload;
 
     // Fetch service and slot details
-    const service = await ServiceModel.findById(payload?.service).session(
+    const serviceRes = await ServiceModel.findById(payload?.service).session(
       session
     );
-    const slot = await SlotModel.findById(payload?.slot).session(session);
+    const slotRes = await SlotModel.findById(payload?.slot).session(session);
 
     // Ensure service and slot exist
-    if (!service) {
+    if (!serviceRes) {
       throw new AppError(404, "Service not found");
     }
-    if (!slot) {
+    if (!slotRes) {
       throw new AppError(404, "Slot not found");
     }
 
@@ -71,9 +71,9 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
     }
 
     // Update slot to booked status
-    if (!slot.isBooked) {
+    if (!slotRes.isBooked) {
       await SlotModel.findByIdAndUpdate(
-        slot._id,
+        slotRes._id,
         { isBooked: true },
         { session }
       );
@@ -84,8 +84,8 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 
     // Create booking
     const bookingData = {
-      service: service._id,
-      slot: slot._id,
+      service: serviceRes._id,
+      slot: slotRes._id,
       customer: bookedUser._id,
       paymentStatus: "pending",
       transactionId,
@@ -111,8 +111,17 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 
     // Return formatted response
     const formattedData = formattedBookingData(populatedBooking);
-    const paymentRes = await paymentInitializer();
-    return paymentRes;
+    const { service, customer } = formattedData;
+    const paymentInfo = {
+      amount: serviceRes.price,
+      tran_id: transactionId,
+      cus_name: customer.name,
+      cus_email: customer.email,
+      cus_phone: customer.phone,
+      cus_add1: customer.address,
+    };
+    const paymentRes = await paymentInitializer(paymentInfo);
+    return { ...formattedData, payment: paymentRes };
   } catch (error) {
     await session.abortTransaction();
     throw error;

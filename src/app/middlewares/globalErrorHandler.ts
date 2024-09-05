@@ -9,7 +9,7 @@ import mongooseValidationErrorHandler from "../errors/mongooseValidationErrorHan
 import zodErrorHandler from "../errors/zodErrorHandler";
 import { TErrorMessage } from "../interfaces/error";
 
-const globalErrorHandler: ErrorRequestHandler = (error, req, res) => {
+const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   // error pattern
   let statusCode = 500;
   let message = "Something went wrong!";
