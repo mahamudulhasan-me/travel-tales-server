@@ -28,7 +28,7 @@ const confirmationService = async (transactionId: string, status: string) => {
   }
 
   // Replace placeholder with actual transaction ID
-  template = template.replace("{{tran_id}}", transactionId);
+  template = template.replace("{{tran_id}}", transactionId || "failed");
 
   return template;
 };
