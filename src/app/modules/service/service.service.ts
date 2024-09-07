@@ -16,26 +16,23 @@ const createService = async (user: JwtPayload, payload: IService) => {
   return createdService;
 };
 
-const getServices = async (params: {
-  sortBy?: "price" | "duration" | undefined;
-}): Promise<IService[]> => {
-  const { sortBy } = params;
+const getServices = async ({
+  sortBy,
+  categoryId,
+}: getServicesParams): Promise<IService[]> => {
+  const query: Record<string, unknown> = { isDeleted: false };
+  if (categoryId) query.categoryId = categoryId;
 
-  // Define the sort object dynamically based on sortBy value
-  const sortOption: Record<string, -1 | 1> = {};
-  if (sortBy === "price") {
-    sortOption.price = 1; // 1 for ascending, -1 for descending
-  } else if (sortBy === "duration") {
-    sortOption.duration = 1;
-  } else {
-    sortOption.createdAt = -1; // Default to sorting by createdAt in descending order
-  }
-
-  const services = await ServiceModel.find({ isDeleted: false }).sort(
-    sortOption
+  const services = await ServiceModel.find(query).sort(
+    sortBy ? { [sortBy]: 1 } : { createdAt: -1 }
   );
   return services;
 };
+
+export interface getServicesParams {
+  sortBy?: "price" | "duration" | "categoryId";
+  categoryId?: number;
+}
 
 const getServiceById = async (id: string | ObjectId) => {
   const service = await ServiceModel.getServiceById(id as ObjectId);

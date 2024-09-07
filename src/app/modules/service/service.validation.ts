@@ -6,6 +6,12 @@ export const ZodCreateServiceValidationSchema = z.object({
       required_error: "Name is required",
       invalid_type_error: "Name must be a string",
     }),
+    categoryId: z
+      .number({
+        required_error: "Category is required",
+        invalid_type_error: "Category id must be a number",
+      })
+      .min(1),
     description: z.string({
       required_error: "Description is required",
       invalid_type_error: "Description must be a string",
