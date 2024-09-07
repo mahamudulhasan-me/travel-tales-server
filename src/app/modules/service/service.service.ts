@@ -16,10 +16,24 @@ const createService = async (user: JwtPayload, payload: IService) => {
   return createdService;
 };
 
-const getServices = async () => {
-  const services = await ServiceModel.find({ isDeleted: false }).sort({
-    createdAt: -1,
-  });
+const getServices = async (params: {
+  sortBy?: "price" | "duration" | undefined;
+}): Promise<IService[]> => {
+  const { sortBy } = params;
+
+  // Define the sort object dynamically based on sortBy value
+  const sortOption: Record<string, -1 | 1> = {};
+  if (sortBy === "price") {
+    sortOption.price = 1; // 1 for ascending, -1 for descending
+  } else if (sortBy === "duration") {
+    sortOption.duration = 1;
+  } else {
+    sortOption.createdAt = -1; // Default to sorting by createdAt in descending order
+  }
+
+  const services = await ServiceModel.find({ isDeleted: false }).sort(
+    sortOption
+  );
   return services;
 };
 

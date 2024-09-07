@@ -13,6 +13,17 @@ const createTestimonial = asyncHandler(async (req, res) => {
   });
 });
 
+const getTestimonial = asyncHandler(async (req, res) => {
+  const testimonials = await TestimonialService.getTestimonial();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Testimonial retrieved successfully",
+    data: testimonials,
+  });
+});
+
 export const TestimonialController = {
   createTestimonial,
+  getTestimonial,
 };

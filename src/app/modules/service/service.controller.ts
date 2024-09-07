@@ -18,7 +18,7 @@ const createService = asyncHandler(async (req, res) => {
 });
 
 const getServices = asyncHandler(async (req, res) => {
-  const services = await ServiceServices.getServices();
+  const services = await ServiceServices.getServices(req.query);
 
   sendResponse(res, {
     success: true,
