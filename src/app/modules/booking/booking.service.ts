@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { JwtPayload } from "jsonwebtoken";
 import { ServiceModel } from "../service/service.model";
 
@@ -111,9 +112,10 @@ const createBooking = async (payload: IBooking, user: JwtPayload) => {
 
     // Return formatted response
     const formattedData = formattedBookingData(populatedBooking);
+    //@ts-ignore
     const { service, customer } = formattedData;
     const paymentInfo = {
-      amount: serviceRes.price,
+      amount: service.price,
       tran_id: transactionId,
       cus_name: customer.name,
       cus_email: customer.email,

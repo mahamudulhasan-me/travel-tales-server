@@ -19,19 +19,27 @@ const createService = async (user: JwtPayload, payload: IService) => {
 const getServices = async ({
   sortBy,
   categoryId,
+  searchTerm,
 }: getServicesParams): Promise<IService[]> => {
   const query: Record<string, unknown> = { isDeleted: false };
-  if (categoryId) query.categoryId = categoryId;
 
-  const services = await ServiceModel.find(query).sort(
-    sortBy ? { [sortBy]: 1 } : { createdAt: -1 }
-  );
+  if (categoryId) query.categoryId = categoryId;
+  if (searchTerm)
+    query.$or = [
+      { name: { $regex: searchTerm, $options: "i" } },
+      { description: { $regex: searchTerm, $options: "i" } },
+    ];
+
+  const services = await ServiceModel.find(query)
+    .sort(sortBy ? { [sortBy]: 1 } : { createdAt: -1 })
+    .lean();
   return services;
 };
 
 export interface getServicesParams {
   sortBy?: "price" | "duration" | "categoryId";
   categoryId?: number;
+  searchTerm?: string;
 }
 
 const getServiceById = async (id: string | ObjectId) => {
