@@ -12,10 +12,6 @@ router.put(
   UserController.updateUser
 );
 
-router.get(
-  "/:id",
-  auth(USER_ROLE.admin || USER_ROLE.user),
-  UserController.getUser
-);
+router.get("/:id", UserController.getUser);
 
 export const UserRouters = router;
