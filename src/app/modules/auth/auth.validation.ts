@@ -13,7 +13,9 @@ export const ZodSignupValidationSchema = z.object({
       .email({ message: "Invalid email address" }),
     password: z.string().min(8),
     role: z.enum(["admin", "user"]),
-    status: z.enum(["Basic", "Premium"]),
+    status: z.enum(["Basic", "Premium"], {
+      required_error: "Status is required",
+    }),
     phone: z.string().optional(),
     address: z.string().optional(),
     profileImage: z.string().optional(),

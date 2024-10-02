@@ -7,7 +7,7 @@ import { ILogin } from "./auth.interface";
 import { createToken } from "./auth.utils";
 
 const signupUser = async (payload: IUser) => {
-  const { email } = payload;
+  const { email, role, status } = payload;
 
   const user = await UserModel.isUserExist(email);
 
@@ -17,7 +17,23 @@ const signupUser = async (payload: IUser) => {
 
   const result = await UserModel.create(payload);
 
-  return result;
+  const accessToken = createToken(
+    { email, role, status },
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in
+  );
+  const refreshToken = createToken(
+    { email, role, status },
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in
+  );
+
+  // Omit password from the user object before returning
+  return {
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+    user: result,
+  };
 };
 
 const loginUser = async (payload: ILogin) => {
@@ -42,6 +58,7 @@ const loginUser = async (payload: ILogin) => {
   const jwtPayload = {
     email: user?.email,
     role: user?.role,
+    status: user?.status,
   };
   const accessToken = createToken(
     jwtPayload,
