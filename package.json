@@ -1,7 +1,7 @@
 {
-  "name": "car-washing-system",
+  "name": "travel-tales-server",
   "author": "Mahamudul Hasan",
-  "version": "1.3.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
