@@ -12,9 +12,13 @@ export const ZodSignupValidationSchema = z.object({
       })
       .email({ message: "Invalid email address" }),
     password: z.string().min(8),
-    phone: z.string().min(11),
     role: z.enum(["admin", "user"]),
-    address: z.string(),
+    status: z.enum(["Basic", "Premium"]),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    profileImage: z.string().optional(),
+    coverImage: z.string().optional(),
+    dateOfBirth: z.date().optional(),
   }),
 });
 
@@ -25,6 +29,6 @@ export const ZodLoginValidationSchema = z.object({
         required_error: "Email is required",
       })
       .email({ message: "Invalid email address" }),
-    password: z.string().min(8),
+    password: z.string().min(6),
   }),
 });

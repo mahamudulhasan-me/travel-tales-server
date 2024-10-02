@@ -8,9 +8,18 @@ const userSchema = new Schema<IUser>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, project: false },
-    phone: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], required: true },
-    address: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["Basic", "Premium"],
+      default: "Basic",
+      required: true,
+    },
+    phone: { type: String },
+    address: { type: String },
+    profileImage: { type: String },
+    coverImage: { type: String },
+    dateOfBirth: { type: Date },
   },
   {
     timestamps: true,
@@ -29,6 +38,7 @@ userSchema.statics.isMatchPassword = async function (
 };
 
 userSchema.pre("save", async function () {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   this.password = await bcrypt.hash(
     user.password,

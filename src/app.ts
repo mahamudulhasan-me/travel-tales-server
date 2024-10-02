@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import path from "path";
@@ -6,6 +7,7 @@ import notFound from "./app/middlewares/notFound";
 import router from "./app/routes";
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 // Serve static files from the "public" directory

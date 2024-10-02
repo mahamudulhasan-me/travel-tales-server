@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { IUser } from "../user/user.interface";

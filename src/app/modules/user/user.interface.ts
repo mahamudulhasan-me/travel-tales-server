@@ -7,9 +7,13 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  phone: string;
+  phone?: string;
   role: TUserRole;
-  address: string;
+  address?: string;
+  profileImage?: string;
+  coverImage?: string;
+  dateOfBirth?: Date;
+  status: "Basic" | "Premium";
 }
 
 export interface IUserMethod extends Model<IUser> {
