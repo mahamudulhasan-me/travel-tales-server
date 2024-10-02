@@ -12,6 +12,7 @@ async function main() {
 
     server = app.listen(config.port, () => {
       console.log(`Express server listening on ${config.port}`);
+      console.log(`Click here to view: http://localhost:${config.port}`);
     });
   } catch (error) {
     console.error(error);

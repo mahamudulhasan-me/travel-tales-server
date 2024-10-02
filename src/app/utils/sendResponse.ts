@@ -4,11 +4,12 @@ interface IResponse<T> {
   statusCode: number;
   success: boolean;
   message: string;
-  token?: string;
+  accessToken?: string;
+  refreshToken?: string;
   data: T;
 }
 
-const isEmpty = (data: any): boolean => {
+const isEmpty = (data: unknown): boolean => {
   if (Array.isArray(data)) {
     return data.length === 0;
   } else if (typeof data === "object" && data !== null) {
@@ -29,7 +30,8 @@ const sendResponse = <T>(res: Response, data: IResponse<T>) => {
   return res.status(data.statusCode).json({
     success: data.success,
     message: data.message,
-    token: data.token,
+    accessToken: data.accessToken,
+    refreshToken: data.refreshToken,
     data: data.data,
   });
 };

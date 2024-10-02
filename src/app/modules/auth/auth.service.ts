@@ -1,12 +1,12 @@
-import jwt from "jsonwebtoken";
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { IUser } from "../user/user.interface";
 import { UserModel } from "../user/user.model";
 import { ILogin } from "./auth.interface";
+import { createToken } from "./auth.utils";
 
 const signupUser = async (payload: IUser) => {
-  const { email, role } = payload;
+  const { email } = payload;
 
   const user = await UserModel.isUserExist(email);
 
@@ -42,14 +42,26 @@ const loginUser = async (payload: ILogin) => {
     email: user?.email,
     role: user?.role,
   };
-  const jwtToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: "1d",
-  });
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in
+  );
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in
+  );
 
   // Omit password from the user object before returning
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...userWithoutPassword } = user.toObject() as IUser;
 
-  return { token: jwtToken, user: userWithoutPassword };
+  return {
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+    user: userWithoutPassword,
+  };
 };
 
 export const AuthServices = {
