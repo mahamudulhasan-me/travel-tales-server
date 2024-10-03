@@ -7,7 +7,7 @@ import { ILogin } from "./auth.interface";
 import { createToken } from "./auth.utils";
 
 const signupUser = async (payload: IUser) => {
-  const { email, role, status } = payload;
+  const { email } = payload;
 
   const user = await UserModel.isUserExist(email);
 
@@ -18,12 +18,12 @@ const signupUser = async (payload: IUser) => {
   const result = await UserModel.create(payload);
 
   const accessToken = createToken(
-    { email, role, status },
+    payload,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
-    { email, role, status },
+    payload,
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in
   );
@@ -53,27 +53,22 @@ const loginUser = async (payload: ILogin) => {
   if (!isPasswordMatch) {
     throw new AppError(401, "Invalid password");
   }
-
+  const { password: _, ...userWithoutPassword } = user.toObject() as IUser;
   // generate jwt token
-  const jwtPayload = {
-    email: user?.email,
-    role: user?.role,
-    status: user?.status,
-  };
+
   const accessToken = createToken(
-    jwtPayload,
+    userWithoutPassword,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
-    jwtPayload,
+    userWithoutPassword,
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in
   );
 
   // Omit password from the user object before returning
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _, ...userWithoutPassword } = user.toObject() as IUser;
 
   return {
     accessToken: accessToken,
