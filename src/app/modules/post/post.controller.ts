@@ -12,6 +12,17 @@ const createPost = asyncHandler(async (req, res) => {
   });
 });
 
+const getPosts = asyncHandler(async (req, res) => {
+  const posts = await PostService.getPosts();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Posts retrieved successfully",
+    data: posts,
+  });
+});
+
 export const PostController = {
   createPost,
+  getPosts,
 };

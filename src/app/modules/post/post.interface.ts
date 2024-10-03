@@ -1,9 +1,11 @@
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 export interface IPost extends Document {
-  author: string;
+  author: ObjectId;
   content: string;
-  upVote: number;
-  downVote: number;
+  votes: {
+    user: string;
+    voteType: "upvote" | "downvote";
+  }[];
   images: string[];
   isPremium: boolean;
 }

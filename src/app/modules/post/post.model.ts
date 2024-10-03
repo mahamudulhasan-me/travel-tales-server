@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { IPost } from "./post.interface";
 
-const PostSchema: Schema = new Schema(
+const PostSchema: Schema = new Schema<IPost>(
   {
     author: {
       type: Schema.Types.ObjectId,
@@ -12,14 +12,22 @@ const PostSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-    upVote: {
-      type: Number,
-      default: 0,
-    },
-    downVote: {
-      type: Number,
-      default: 0,
-    },
+
+    votes: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "user",
+          required: true,
+        },
+        voteType: {
+          type: String,
+          enum: ["upvote", "downvote"],
+          required: true,
+        },
+      },
+    ],
+
     images: {
       type: [String], // Array of image URLs
       default: [],
