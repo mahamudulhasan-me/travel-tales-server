@@ -14,7 +14,10 @@ const createPost = async (payload: IPost) => {
 
 const getPosts = async () => {
   const posts = await PostModel.find()
-    .populate("author")
+    .populate({
+      path: "author",
+      select: "-password", // Exclude password
+    })
     .sort({ createdAt: -1 });
   return posts;
 };

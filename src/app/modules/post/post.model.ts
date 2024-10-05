@@ -27,7 +27,7 @@ const PostSchema: Schema = new Schema<IPost>(
         },
         postId: {
           type: Schema.Types.ObjectId,
-          ref: "Post",
+          ref: "post",
           required: true,
         },
       },
@@ -51,6 +51,6 @@ const PostSchema: Schema = new Schema<IPost>(
   }
 );
 
-const PostModel = mongoose.model<IPost>("Post", PostSchema);
+const PostModel = mongoose.model<IPost>("post", PostSchema);
 
 export default PostModel;

@@ -1,7 +1,7 @@
+import { ObjectId } from "mongoose";
+
 export interface IComment {
-  postId: string;
-  user: string;
-  comment: string;
-  upvote: number;
-  downvote: number;
+  postId: ObjectId;
+  author: ObjectId;
+  content: string;
 }
