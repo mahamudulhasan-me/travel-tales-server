@@ -35,8 +35,21 @@ const handleVote = asyncHandler(async (req, res) => {
   });
 });
 
+const getPostByUserId = asyncHandler(async (req, res) => {
+  const userId = req.params.userId as string;
+
+  const post = await PostService.getPostByUserId(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Post retrieved successfully",
+    data: post,
+  });
+});
+
 export const PostController = {
   createPost,
   getPosts,
   handleVote,
+  getPostByUserId,
 };

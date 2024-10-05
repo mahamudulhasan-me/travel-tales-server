@@ -9,4 +9,10 @@ router.get("/", PostController.getPosts);
 
 router.post("/vote", PostController.handleVote);
 
+router.get(
+  "/postByUser/:userId",
+
+  PostController.getPostByUserId
+);
+
 export const PostRouters = router;

@@ -89,8 +89,18 @@ const handleVote = async (
   return post; // Optionally return the updated post
 };
 
+const getPostByUserId = async (userId: string) => {
+  const post = await PostModel.find({ author: userId })
+    .populate({
+      path: "author",
+      select: "-password",
+    })
+    .sort({ createdAt: -1 });
+  return post;
+};
 export const PostService = {
   createPost,
   getPosts,
   handleVote,
+  getPostByUserId,
 };
