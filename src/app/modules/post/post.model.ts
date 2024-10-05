@@ -15,7 +15,7 @@ const PostSchema: Schema = new Schema<IPost>(
 
     votes: [
       {
-        user: {
+        userId: {
           type: Schema.Types.ObjectId,
           ref: "user",
           required: true,
@@ -23,6 +23,11 @@ const PostSchema: Schema = new Schema<IPost>(
         voteType: {
           type: String,
           enum: ["upvote", "downvote"],
+          required: true,
+        },
+        postId: {
+          type: Schema.Types.ObjectId,
+          ref: "Post",
           required: true,
         },
       },
@@ -35,6 +40,10 @@ const PostSchema: Schema = new Schema<IPost>(
     isPremium: {
       type: Boolean,
       default: false,
+    },
+    voteCount: {
+      type: Number,
+      default: 0,
     },
   },
   {

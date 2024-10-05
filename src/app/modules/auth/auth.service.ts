@@ -12,23 +12,25 @@ const signupUser = async (payload: IUser) => {
   const user = await UserModel.isUserExist(email);
 
   if (user) {
-    throw new AppError(401, "User already exist");
+    throw new AppError(401, "User already exists");
   }
 
   const result = await UserModel.create(payload);
 
+  // Get the user _id
+  const userId = result._id.toString();
+
   const accessToken = createToken(
-    payload,
+    result, // Include the _id in the token payload
     config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
-    payload,
+    result, // Include the _id in the token payload
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in
   );
 
-  // Omit password from the user object before returning
   return {
     accessToken: accessToken,
     refreshToken: refreshToken,
@@ -39,12 +41,14 @@ const signupUser = async (payload: IUser) => {
 const loginUser = async (payload: ILogin) => {
   const { email, password } = payload;
 
+  // Find the user by email and include the password field
   const user = await UserModel.findOne({ email }).select("+password").exec();
 
   if (!user) {
     throw new AppError(404, "User not found");
   }
 
+  // Check if the password matches
   const isPasswordMatch = await UserModel.isMatchPassword(
     password,
     user.password
@@ -53,27 +57,27 @@ const loginUser = async (payload: ILogin) => {
   if (!isPasswordMatch) {
     throw new AppError(401, "Invalid password");
   }
-  const { password: _, ...userWithoutPassword } = user.toObject() as IUser;
-  // generate jwt token
 
+  // Extract the _id and remove the password field
+  const { _id, password: _, ...userWithoutPassword } = user.toObject();
+
+  // Pass _id as a string explicitly to the token payload
   const accessToken = createToken(
-    userWithoutPassword,
+    { _id: _id.toString(), ...userWithoutPassword }, // Include _id as a string
     config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
+
   const refreshToken = createToken(
-    userWithoutPassword,
+    { _id: _id.toString(), ...userWithoutPassword }, // Same for refresh token
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in
   );
 
-  // Omit password from the user object before returning
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
   return {
     accessToken: accessToken,
     refreshToken: refreshToken,
-    user: userWithoutPassword,
+    user: { _id: _id.toString(), ...userWithoutPassword }, // Return _id as a string in the response
   };
 };
 

@@ -7,4 +7,6 @@ router.post("/", PostController.createPost);
 
 router.get("/", PostController.getPosts);
 
+router.post("/vote", PostController.handleVote);
+
 export const PostRouters = router;

@@ -19,13 +19,12 @@ const getPosts = async () => {
   return posts;
 };
 
-// Function to handle voting
 const handleVote = async (
   postId: string,
   userId: string,
   voteType: "upvote" | "downvote"
 ) => {
-  // Find the post
+  // Find the post by its ID
   const post = await PostModel.findById(postId);
 
   if (!post) {
@@ -34,29 +33,61 @@ const handleVote = async (
 
   // Check if the user has already voted
   const existingVote = post.votes.find(
-    (vote) => vote.user.toString() === userId
+    (vote) => vote.userId.toString() === userId
   );
 
   if (existingVote) {
-    // If the user already voted, update the vote type
+    // If the user has already voted, check if they are voting the same way again
     if (existingVote.voteType === voteType) {
-      // If they voted the same way again, remove the vote
-      post.votes = post.votes.filter((vote) => vote.user.toString() !== userId);
+      // If the vote type is the same, remove the vote
+      post.votes = post.votes.filter(
+        (vote) => vote.userId.toString() !== userId
+      );
+
+      // Adjust the vote count (ensure it doesn't go negative)
+      if (voteType === "upvote") {
+        post.voteCount = Math.max(post.voteCount - 1, 0); // Prevent negative count
+      } else if (voteType === "downvote") {
+        post.voteCount = Math.max(post.voteCount + 1, 0); // Adjust for the previous downvote
+      }
     } else {
-      // If they change their vote, update the vote type
+      // If the user changes their vote (upvote -> downvote or vice versa)
+      if (existingVote.voteType === "upvote") {
+        post.voteCount = Math.max(post.voteCount - 1, 0); // Revert the previous upvote
+      } else if (existingVote.voteType === "downvote") {
+        post.voteCount = Math.max(post.voteCount + 1, 0); // Revert the previous downvote
+      }
+
+      // Update the vote type to the new one
       existingVote.voteType = voteType;
+
+      // Adjust the vote count based on the new vote type
+      if (voteType === "upvote") {
+        post.voteCount += 1;
+      } else if (voteType === "downvote") {
+        post.voteCount = Math.max(post.voteCount - 1, 0); // Prevent negative count
+      }
     }
   } else {
     // If the user hasn't voted yet, add a new vote
-    post.votes.push({ user: userId, voteType });
+    post.votes.push({ userId, voteType, postId });
+
+    // Increment or decrement the vote count based on the vote type
+    if (voteType === "upvote") {
+      post.voteCount += 1;
+    } else if (voteType === "downvote") {
+      post.voteCount = Math.max(post.voteCount - 1, 0); // Prevent negative count
+    }
   }
 
-  // Save the updated post
+  // Save the updated post with the new vote count
   await post.save();
 
   return post; // Optionally return the updated post
 };
+
 export const PostService = {
   createPost,
   getPosts,
+  handleVote,
 };

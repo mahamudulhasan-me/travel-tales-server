@@ -22,7 +22,21 @@ const getPosts = asyncHandler(async (req, res) => {
   });
 });
 
+const handleVote = asyncHandler(async (req, res) => {
+  const { postId, userId, voteType } = req.body;
+
+  const post = await PostService.handleVote(postId, userId, voteType);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Post updated successfully",
+    data: post,
+  });
+});
+
 export const PostController = {
   createPost,
   getPosts,
+  handleVote,
 };
