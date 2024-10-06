@@ -15,6 +15,7 @@ export interface IUser {
   coverImage?: string;
   dateOfBirth?: Date;
   status: "Basic" | "Premium";
+  bio?: string;
 }
 
 export interface IUserWithoutPassword {
@@ -28,6 +29,7 @@ export interface IUserWithoutPassword {
   coverImage?: string;
   dateOfBirth?: Date;
   status: "Basic" | "Premium";
+  bio?: string;
 }
 
 export interface IUserMethod extends Model<IUser> {

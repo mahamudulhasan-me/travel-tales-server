@@ -6,9 +6,9 @@ import { UserController } from "./user.controller";
 const router = Router();
 
 router.get("/", auth(USER_ROLE.admin), UserController.getAllUsers);
-router.put(
+router.patch(
   "/:id",
-  auth(USER_ROLE.admin || USER_ROLE.user),
+
   UserController.updateUser
 );
 
