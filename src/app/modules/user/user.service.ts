@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { startSession } from "mongoose";
+import { paymentInitializer } from "../payment/payment.utils";
 import { UserModel } from "./user.model";
+import PostModel from "../post/post.model";
 
 const getAllUsers = async () => {
   const users = await UserModel.find();
@@ -15,6 +18,7 @@ const getUser = async (id: string) => {
   const user = await UserModel.findById(id);
   return user;
 };
+
 export const UserService = {
   getAllUsers,
   updateUser,

@@ -5,6 +5,7 @@ import config from "../../config";
 export const paymentInitializer = async (paymentInfo: any) => {
   const { amount, tran_id, cus_name, cus_email, cus_phone, cus_add1 } =
     paymentInfo;
+  console.log(paymentInfo);
   try {
     const res = await axios.post(config.payment_url!, {
       store_id: config.store_id,
@@ -19,8 +20,8 @@ export const paymentInitializer = async (paymentInfo: any) => {
       amount,
       tran_id,
       currency: "BDT",
-      success_url: `https://car-washing-system-chi.vercel.app/api/payment/confirmation?tran_id=${tran_id}&status=success`,
-      fail_url: `https://car-washing-system-chi.vercel.app/api/payment/confirmation?status=failed`,
+      success_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=success`,
+      fail_url: `error`,
       cancel_url: config.client_base_url,
       desc: "N/A",
       type: "json",
