@@ -20,8 +20,11 @@ export const paymentInitializer = async (paymentInfo: any) => {
       amount,
       tran_id,
       currency: "BDT",
+      // success_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=success`,
       success_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=success`,
-      fail_url: `error`,
+
+      fail_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=failed`,
+
       cancel_url: config.client_base_url,
       desc: "N/A",
       type: "json",

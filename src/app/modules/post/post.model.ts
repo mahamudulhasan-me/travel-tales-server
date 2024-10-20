@@ -13,6 +13,11 @@ const PostSchema: Schema = new Schema<IPost>(
       required: true,
     },
 
+    category: {
+      type: String,
+      required: true,
+    },
+
     votes: [
       {
         userId: {

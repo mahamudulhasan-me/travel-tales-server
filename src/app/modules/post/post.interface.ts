@@ -3,6 +3,7 @@ import { Document, ObjectId } from "mongoose";
 export interface IPost extends Document {
   author: ObjectId;
   content: string;
+  category: string;
   votes: {
     userId: string;
     postId: string;

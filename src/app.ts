@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api", router);
 
 app.get("/", (req, res) => {
-  res.send("Car Washing System Booking is Running!");
+  res.send("Travel Tales Server is Running!");
 });
 
 app.use(globalErrorHandler);

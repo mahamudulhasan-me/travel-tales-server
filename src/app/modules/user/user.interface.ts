@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 export type TUserRole = "admin" | "user";
 
@@ -16,6 +16,9 @@ export interface IUser {
   dateOfBirth?: Date;
   status: "Basic" | "Premium";
   bio?: string;
+
+  followers: ObjectId[];
+  following: ObjectId[];
 }
 
 export interface IUserWithoutPassword {

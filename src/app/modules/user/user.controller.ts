@@ -36,8 +36,32 @@ const getUser = asyncHandler(async (req, res) => {
     data: user,
   });
 });
+
+const handleFollow = asyncHandler(async (req, res) => {
+  const { userId, followerId } = req.body;
+  const user = await UserService.followUser(userId, followerId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User followed successfully",
+    data: user,
+  });
+});
+
+const handleUnfollow = asyncHandler(async (req, res) => {
+  const { userId, followerId } = req.body;
+  const user = await UserService.unfollowUser(userId, followerId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User unfollowed successfully",
+    data: user,
+  });
+});
 export const UserController = {
   getAllUsers,
   updateUser,
   getUser,
+  handleFollow,
+  handleUnfollow,
 };

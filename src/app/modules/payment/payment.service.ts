@@ -83,6 +83,7 @@ const makePremium = async (id: string) => {
 };
 
 const confirmationService = async (transactionId: string, status: string) => {
+  console.log(transactionId, status);
   try {
     // Verifying the payment status using the transactionId
     const verifyPaymentRes = await verifyPayment(transactionId);

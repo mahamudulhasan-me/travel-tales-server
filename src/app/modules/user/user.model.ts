@@ -21,6 +21,9 @@ const userSchema = new Schema<IUser>(
     coverImage: { type: String, default: "" },
     dateOfBirth: { type: Date, default: Date.now },
     bio: { type: String, default: "" },
+
+    followers: [{ type: Schema.Types.ObjectId, ref: "user" }],
+    following: [{ type: Schema.Types.ObjectId, ref: "user" }],
   },
   {
     timestamps: true,

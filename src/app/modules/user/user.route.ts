@@ -1,11 +1,9 @@
 import { Router } from "express";
-import auth from "../../middlewares/auth";
-import { USER_ROLE } from "../../utils/const";
 import { UserController } from "./user.controller";
 
 const router = Router();
 
-router.get("/", auth(USER_ROLE.admin), UserController.getAllUsers);
+router.get("/", UserController.getAllUsers);
 router.patch(
   "/:id",
 
@@ -13,5 +11,8 @@ router.patch(
 );
 
 router.get("/:id", UserController.getUser);
+
+router.post("/follow", UserController.handleFollow);
+router.post("/unfollow", UserController.handleUnfollow);
 
 export const UserRouters = router;
