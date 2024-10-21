@@ -15,6 +15,7 @@ const makePremium = async (id: string) => {
 
     // Find the user
     const user = await UserModel.findById(id).session(session);
+    console.log({ user });
     if (!user) {
       throw new Error("User not found");
     }
@@ -92,7 +93,7 @@ const confirmationService = async (transactionId: string, status: string) => {
 
     if (verifyPaymentRes && verifyPaymentRes.pay_status === "Successful") {
       await PaymentModel.findOneAndUpdate(
-        { transactionId },
+        { transactionId: transactionId }, // Make sure you're matching by string here
         { paymentStatus: "paid" },
         { new: true }
       );

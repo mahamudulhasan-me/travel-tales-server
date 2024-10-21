@@ -5,11 +5,13 @@ import config from "../../config";
 export const paymentInitializer = async (paymentInfo: any) => {
   const { amount, tran_id, cus_name, cus_email, cus_phone, cus_add1 } =
     paymentInfo;
-  console.log(paymentInfo);
+
   try {
     const res = await axios.post(config.payment_url!, {
       store_id: config.store_id,
       signature_key: config.signature_key,
+      amount,
+      tran_id,
       cus_name,
       cus_email: cus_email || "N/A",
       cus_phone: cus_phone || "N/A",
@@ -17,10 +19,8 @@ export const paymentInitializer = async (paymentInfo: any) => {
       cus_add2: "N/A",
       cus_city: "N/A",
       cus_country: "Bangladesh",
-      amount,
-      tran_id,
       currency: "BDT",
-      // success_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=success`,
+      // success_url: `http://localhost:3000/`,
       success_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=success`,
 
       fail_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=failed`,

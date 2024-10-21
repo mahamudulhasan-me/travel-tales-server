@@ -7,7 +7,7 @@ const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, project: false },
+    password: { type: String, required: true, select: false }, // Use select: false
     role: { type: String, enum: ["admin", "user"], required: true },
     status: {
       type: String,
@@ -41,18 +41,22 @@ userSchema.statics.isMatchPassword = async function (
   return await bcrypt.compare(plainPassword, hashPassword);
 };
 
-userSchema.pre("save", async function () {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  this.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds)
-  );
-});
+userSchema.pre("save", async function (next) {
+  // Only hash the password if it has been modified
+  if (!this.isModified("password")) {
+    return next();
+  }
 
-userSchema.post("save", function (userInfo, next) {
-  userInfo.password = "";
+  const salt = await bcrypt.genSalt(Number(config.bcrypt_salt_rounds));
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+
+// Remove the password from the output in responses
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  delete userObject.password;
+  return userObject;
+};
 
 export const UserModel = model<IUser, IUserMethod>("user", userSchema);
