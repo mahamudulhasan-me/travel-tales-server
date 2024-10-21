@@ -15,7 +15,6 @@ const makePremium = async (id: string) => {
 
     // Find the user
     const user = await UserModel.findById(id).session(session);
-    console.log({ user });
     if (!user) {
       throw new Error("User not found");
     }
@@ -29,10 +28,6 @@ const makePremium = async (id: string) => {
     if (!userPosts || userPosts.length === 0) {
       throw new Error("User does not have any upvoted posts");
     }
-
-    // Proceed with setting the user as premium
-    user.status = "Premium";
-    await user.save({ session });
 
     // Generate a unique transaction ID
     const transactionId = `txn_${Math.floor(Math.random() * 10000000)}`;
@@ -63,6 +58,7 @@ const makePremium = async (id: string) => {
       cusEmail: paymentInfo.cus_email,
       cusPhone: paymentInfo.cus_phone,
       cusAddress: paymentInfo.cus_add1,
+      paymentStatus: "pending", // Set the payment status as pending initially
     });
 
     await payment.save({ session });
@@ -70,7 +66,7 @@ const makePremium = async (id: string) => {
     // Commit the transaction if everything is successful
     await session.commitTransaction();
 
-    console.log("Payment and Premium status updated successfully:", paymentRes);
+    console.log("Payment initialized successfully:", paymentRes);
     return paymentRes;
   } catch (error) {
     // Abort the transaction on error
@@ -84,7 +80,6 @@ const makePremium = async (id: string) => {
 };
 
 const confirmationService = async (transactionId: string, status: string) => {
-  console.log(transactionId, status);
   try {
     // Verifying the payment status using the transactionId
     const verifyPaymentRes = await verifyPayment(transactionId);
@@ -92,16 +87,27 @@ const confirmationService = async (transactionId: string, status: string) => {
     let templatePath;
 
     if (verifyPaymentRes && verifyPaymentRes.pay_status === "Successful") {
-      await PaymentModel.findOneAndUpdate(
+      // Update the payment status to 'paid'
+      const payment = await PaymentModel.findOneAndUpdate(
         { transactionId: transactionId }, // Make sure you're matching by string here
         { paymentStatus: "paid" },
         { new: true }
       );
+
+      if (!payment) {
+        throw new Error("Payment record not found.");
+      }
+
+      // Update the user's status to 'Premium'
+      await UserModel.findByIdAndUpdate(payment.userId, { status: "Premium" });
+
+      // Set the success template path
       templatePath = path.join(
         process.cwd(),
         "public/view/PaymentSuccess.html"
       );
     } else {
+      // Set the failure template path
       templatePath = path.join(process.cwd(), "public/view/PaymentFailed.html");
     }
 

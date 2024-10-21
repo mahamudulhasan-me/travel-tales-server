@@ -17,16 +17,16 @@ const signupUser = async (payload: IUser) => {
 
   const result = await UserModel.create(payload);
 
-  // Get the user _id
-  const userId = result._id.toString();
+  // Convert result to plain object
+  const plainUser = result.toObject();
 
   const accessToken = createToken(
-    result, // Include the _id in the token payload
+    plainUser, // Use plainUser here
     config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
-    result, // Include the _id in the token payload
+    plainUser, // Use plainUser here
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in
   );
@@ -34,7 +34,7 @@ const signupUser = async (payload: IUser) => {
   return {
     accessToken: accessToken,
     refreshToken: refreshToken,
-    user: result,
+    user: plainUser, // Return plainUser if needed
   };
 };
 
