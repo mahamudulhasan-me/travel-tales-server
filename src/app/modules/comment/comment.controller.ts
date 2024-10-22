@@ -27,7 +27,32 @@ const getComments = asyncHandler(async (req, res) => {
   });
 });
 
+const updateComment = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { content } = req.body;
+  const comment = await CommentServices.updateComment(id, content);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Comment updated successfully",
+    data: comment,
+  });
+});
+
+const deleteComment = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const comment = await CommentServices.deleteComment(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Comment deleted successfully",
+    data: comment,
+  });
+});
+
 export const CommentController = {
   createComment,
   getComments,
+  updateComment,
+  deleteComment,
 };

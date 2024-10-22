@@ -13,7 +13,14 @@ const createPost = asyncHandler(async (req, res) => {
 });
 
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await PostService.getPosts();
+  const { limit = 5, filterBy = "default", sortBy = "default" } = req.query;
+
+  const posts = await PostService.getPosts(
+    parseInt(limit, 10),
+    filterBy as string,
+    sortBy as "default" | "upvote" | "downvote"
+  );
+
   sendResponse(res, {
     success: true,
     statusCode: 200,

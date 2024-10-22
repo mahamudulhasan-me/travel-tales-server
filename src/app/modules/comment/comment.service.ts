@@ -26,7 +26,24 @@ const getComments = async (postId: string) => {
     .sort({ createdAt: -1 });
   return comments;
 };
+
+const updateComment = async (commentId: string, content: string) => {
+  const comment = await CommentModel.findByIdAndUpdate(
+    commentId,
+    { content }, // Updating only content
+    { new: true } // Return the updated document
+  );
+  return comment;
+};
+
+const deleteComment = async (commentId: string) => {
+  const result = await CommentModel.findByIdAndDelete(commentId);
+  return result;
+};
+
 export const CommentServices = {
   createComment,
   getComments,
+  updateComment,
+  deleteComment,
 };
