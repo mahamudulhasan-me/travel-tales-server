@@ -15,33 +15,47 @@ const createPost = async (payload: IPost) => {
 const getPosts = async (
   limit: number,
   filterBy: "default" | string,
-  sortBy: "default" | "upVote" | "downVote"
+  sortBy: "default" | "upVote" | "downVote",
+  searchValue?: string // Optional search value
 ): Promise<{ totalPosts: number; posts: IPost[] }> => {
   // Build filter and sort conditions
-  const filterOptions: { [key: string]: string } = {};
+  const filterOptions: { [key: string]: any } = {};
 
-  // Apply category filtering only if filterBy is not "default"
-  if (filterBy && filterBy !== "default") {
-    filterOptions.category = filterBy;
+  // If searchValue is provided, prioritize search over other filters
+  if (searchValue) {
+    const searchRegex = new RegExp(searchValue, "i"); // "i" for case-insensitive search
+    filterOptions.$or = [
+      { content: { $regex: searchRegex } }, // Search in content
+
+      { "author.name": { $regex: searchRegex } }, // Search in author name (if author is populated)
+    ];
+  } else {
+    // Apply category filtering only if filterBy is not "default" and no searchValue
+    if (filterBy && filterBy !== "default") {
+      filterOptions.category = filterBy;
+    }
   }
 
   // Build sort condition
   const sortOptions: { [key: string]: number } = {};
 
-  // Sorting based on the selected sorting option
-  if (!sortBy || sortBy === "default") {
-    sortOptions.createdAt = -1; // Default: Sort by latest date (descending)
-  } else if (sortBy === "upVote") {
-    sortOptions.voteCount = -1; // Sort by most votes (descending)
-  } else if (sortBy === "downVote") {
-    sortOptions.voteCount = 1; // Sort by least votes (ascending)
+  if (!searchValue) {
+    // Only apply sorting if no search is happening
+    if (!sortBy || sortBy === "default") {
+      sortOptions.createdAt = -1; // Default: Sort by latest date (descending)
+    } else if (sortBy === "upVote") {
+      sortOptions.voteCount = -1; // Sort by most votes (descending)
+    } else if (sortBy === "downVote") {
+      sortOptions.voteCount = 1; // Sort by least votes (ascending)
+    }
   }
 
   const totalPosts = await PostModel.countDocuments(filterOptions); // Get total post count
+
   const posts = await PostModel.find(filterOptions)
     .sort(sortOptions)
     .limit(limit || 5)
-    .populate({ path: "author", select: "-password" }); // Limit the number of posts (default: 5)
+    .populate({ path: "author", select: "-password" }); // Populate the author field, excluding the password
 
   return { totalPosts, posts };
 };
@@ -122,9 +136,18 @@ const getPostByUserId = async (userId: string) => {
     .sort({ createdAt: -1 });
   return post;
 };
+
+const updatePost = async (postId: string, payload: IPost) => {
+  const post = await PostModel.findOneAndUpdate({ _id: postId }, payload, {
+    new: true,
+  });
+  return post;
+};
+
 export const PostService = {
   createPost,
   getPosts,
   handleVote,
   getPostByUserId,
+  updatePost,
 };

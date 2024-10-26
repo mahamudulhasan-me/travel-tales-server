@@ -13,12 +13,18 @@ const createPost = asyncHandler(async (req, res) => {
 });
 
 const getPosts = asyncHandler(async (req, res) => {
-  const { limit = 5, filterBy = "default", sortBy = "default" } = req.query;
+  const {
+    limit = 5,
+    filterBy = "default",
+    sortBy = "default",
+    searchValue = "",
+  } = req.query;
 
   const posts = await PostService.getPosts(
     parseInt(limit, 10),
     filterBy as string,
-    sortBy as "default" | "upvote" | "downvote"
+    sortBy as "default" | "upVote" | "downVote",
+    searchValue as string
   );
 
   sendResponse(res, {
@@ -54,9 +60,21 @@ const getPostByUserId = asyncHandler(async (req, res) => {
   });
 });
 
+const updatePost = asyncHandler(async (req, res) => {
+  const { postId } = req.params;
+  const post = await PostService.updatePost(postId, req.body);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Post updated successfully",
+    data: post,
+  });
+});
+
 export const PostController = {
   createPost,
   getPosts,
   handleVote,
   getPostByUserId,
+  updatePost,
 };

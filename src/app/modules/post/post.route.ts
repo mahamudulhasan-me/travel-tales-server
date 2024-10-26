@@ -15,4 +15,8 @@ router.get(
   PostController.getPostByUserId
 );
 
+router.patch("/:postId", PostController.updatePost);
+
+// router.get("/search-posts", PostController.searchPosts);
+
 export const PostRouters = router;
