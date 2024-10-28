@@ -40,7 +40,19 @@ const loginUser = asyncHandler(async (req, res, next) => {
   });
 });
 
+const handleForgetPassword = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+  const result = await AuthServices.handleForgetPassword(email, password);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Password updated successfully",
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   signupUser,
   loginUser,
+  handleForgetPassword,
 };

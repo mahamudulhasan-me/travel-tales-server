@@ -12,7 +12,16 @@ const updateUser = async (id: string, data: any) => {
   return updatedUser;
 };
 const getUser = async (id: string) => {
-  const user = await UserModel.findById(id);
+  const user = await UserModel.findById(id)
+    .populate({
+      path: "followers",
+      select: "name profileImage status _id",
+    })
+    .populate({
+      path: "following",
+      select: "name profileImage status _id",
+    });
+
   return user;
 };
 
@@ -96,7 +105,15 @@ const unfollowUser = async (followerId: string, userId: string) => {
   }
 };
 
-export { followUser, unfollowUser };
+const deleteUser = async (userId: string) => {
+  const user = UserModel.findByIdAndDelete(userId);
+  return user;
+};
+
+const changeUserRole = async (userId: string, role: string) => {
+  const user = UserModel.findByIdAndUpdate(userId, { role }, { new: true });
+  return user;
+};
 
 export const UserService = {
   getAllUsers,
@@ -104,4 +121,6 @@ export const UserService = {
   getUser,
   followUser,
   unfollowUser,
+  deleteUser,
+  changeUserRole,
 };

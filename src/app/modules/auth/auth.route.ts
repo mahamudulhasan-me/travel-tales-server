@@ -19,4 +19,7 @@ router.post(
   validRequestHandler(ZodLoginValidationSchema),
   AuthControllers.loginUser
 );
+
+router.post("/forget-password", AuthControllers.handleForgetPassword);
+
 export const AuthRouters = router;

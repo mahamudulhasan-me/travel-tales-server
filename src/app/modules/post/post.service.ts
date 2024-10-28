@@ -144,10 +144,16 @@ const updatePost = async (postId: string, payload: IPost) => {
   return post;
 };
 
+const deletePost = async (postId: string) => {
+  const post = await PostModel.findByIdAndDelete(postId);
+  return post;
+};
+
 export const PostService = {
   createPost,
   getPosts,
   handleVote,
   getPostByUserId,
   updatePost,
+  deletePost,
 };

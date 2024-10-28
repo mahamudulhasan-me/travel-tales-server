@@ -19,4 +19,6 @@ router.patch("/:postId", PostController.updatePost);
 
 // router.get("/search-posts", PostController.searchPosts);
 
+router.delete("/:postId", PostController.deletePost);
+
 export const PostRouters = router;

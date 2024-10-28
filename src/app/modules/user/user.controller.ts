@@ -58,10 +58,36 @@ const handleUnfollow = asyncHandler(async (req, res) => {
     data: user,
   });
 });
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = await UserService.deleteUser(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User deleted successfully",
+    data: user,
+  });
+});
+
+const changeUserRole = asyncHandler(async (req, res) => {
+  const { userId, role } = req.body;
+
+  const user = await UserService.changeUserRole(userId, role);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User role changed successfully",
+    data: user,
+  });
+});
+
 export const UserController = {
   getAllUsers,
   updateUser,
   getUser,
   handleFollow,
   handleUnfollow,
+  deleteUser,
+  changeUserRole,
 };

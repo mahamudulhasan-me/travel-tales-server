@@ -71,10 +71,22 @@ const updatePost = asyncHandler(async (req, res) => {
   });
 });
 
+const deletePost = asyncHandler(async (req, res) => {
+  const { postId } = req.params;
+  const post = await PostService.deletePost(postId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Post deleted successfully",
+    data: post,
+  });
+});
+
 export const PostController = {
   createPost,
   getPosts,
   handleVote,
   getPostByUserId,
   updatePost,
+  deletePost,
 };

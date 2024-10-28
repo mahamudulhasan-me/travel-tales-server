@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
+import bcrypt from "bcrypt";
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { IUser } from "../user/user.interface";
 import { UserModel } from "../user/user.model";
 import { ILogin } from "./auth.interface";
 import { createToken } from "./auth.utils";
-
 const signupUser = async (payload: IUser) => {
   const { email } = payload;
 
@@ -81,7 +81,28 @@ const loginUser = async (payload: ILogin) => {
   };
 };
 
+const handleForgetPassword = async (email: string, password: string) => {
+  const user = await UserModel.findOne({ email }).select("+password"); // Explicitly select the password
+
+  if (!user) {
+    new AppError(404, "User not found");
+  }
+
+  // Hash the new password
+  const salt = await bcrypt.genSalt(Number(config.bcrypt_salt_rounds));
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  console.log("Hashed Password: ", hashedPassword);
+
+  // Update the user's password
+  user!.password = hashedPassword;
+  await user!.save(); // Save the updated user
+
+  return user;
+};
+
 export const AuthServices = {
   signupUser,
   loginUser,
+  handleForgetPassword,
 };

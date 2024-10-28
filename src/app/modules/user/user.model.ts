@@ -15,7 +15,7 @@ const userSchema = new Schema<IUser>(
       default: "Basic",
       required: true,
     },
-    phone: { type: String, unique: true, default: "" },
+    phone: { type: String, default: "" },
     address: { type: String, default: "" },
     profileImage: { type: String, default: "" },
     coverImage: { type: String, default: "" },
