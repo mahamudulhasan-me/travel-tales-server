@@ -66,12 +66,11 @@ const makePremium = async (id: string) => {
     // Commit the transaction if everything is successful
     await session.commitTransaction();
 
-    console.log("Payment initialized successfully:", paymentRes);
     return paymentRes;
   } catch (error) {
     // Abort the transaction on error
     await session.abortTransaction();
-    console.error("Transaction aborted:", error.message);
+
     throw error;
   } finally {
     // End the session

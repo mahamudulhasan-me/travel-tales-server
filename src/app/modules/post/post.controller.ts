@@ -14,14 +14,17 @@ const createPost = asyncHandler(async (req, res) => {
 
 const getPosts = asyncHandler(async (req, res) => {
   const {
-    limit = 5,
+    limit = "5",
     filterBy = "default",
     sortBy = "default",
     searchValue = "",
   } = req.query;
 
+  // Ensure limit is a string and not ParsedQs (if not a string, default to "5")
+  const parsedLimit = typeof limit === "string" ? limit : "5";
+
   const posts = await PostService.getPosts(
-    parseInt(limit, 10),
+    parseInt(parsedLimit, 10),
     filterBy as string,
     sortBy as "default" | "upVote" | "downVote",
     searchValue as string

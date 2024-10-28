@@ -1,3 +1,4 @@
+import { SortOrder } from "mongoose"; // Import the SortOrder type
 import { IPost } from "./post.interface";
 import PostModel from "./post.model";
 
@@ -13,10 +14,10 @@ const createPost = async (payload: IPost) => {
 };
 
 const getPosts = async (
-  limit: number,
-  filterBy: "default" | string,
-  sortBy: "default" | "upVote" | "downVote",
-  searchValue?: string // Optional search value
+  limit: number = 5,
+  filterBy: "default" | string = "default",
+  sortBy: "default" | "upVote" | "downVote" = "default",
+  searchValue?: string
 ): Promise<{ totalPosts: number; posts: IPost[] }> => {
   // Build filter and sort conditions
   const filterOptions: { [key: string]: any } = {};
@@ -26,7 +27,6 @@ const getPosts = async (
     const searchRegex = new RegExp(searchValue, "i"); // "i" for case-insensitive search
     filterOptions.$or = [
       { content: { $regex: searchRegex } }, // Search in content
-
       { "author.name": { $regex: searchRegex } }, // Search in author name (if author is populated)
     ];
   } else {
@@ -37,7 +37,7 @@ const getPosts = async (
   }
 
   // Build sort condition
-  const sortOptions: { [key: string]: number } = {};
+  const sortOptions: { [key: string]: SortOrder } = {}; // Use SortOrder type
 
   if (!searchValue) {
     // Only apply sorting if no search is happening
@@ -53,8 +53,8 @@ const getPosts = async (
   const totalPosts = await PostModel.countDocuments(filterOptions); // Get total post count
 
   const posts = await PostModel.find(filterOptions)
-    .sort(sortOptions)
-    .limit(limit || 5)
+    .sort(sortOptions) // Use properly typed sortOptions
+    .limit(limit)
     .populate({ path: "author", select: "-password" }); // Populate the author field, excluding the password
 
   return { totalPosts, posts };

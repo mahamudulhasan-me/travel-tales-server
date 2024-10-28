@@ -26,10 +26,6 @@ const getUser = async (id: string) => {
 };
 
 // Follow a user
-
-// Follow a user
-
-// Follow a user
 const followUser = async (followerId: string, userId: string) => {
   // Convert string IDs to ObjectId
   const userToFollowId = new Types.ObjectId(userId);
@@ -43,8 +39,13 @@ const followUser = async (followerId: string, userId: string) => {
     throw new Error("User not found");
   }
 
-  // Check if already following
-  if (!currentUser.following.includes(userToFollowId)) {
+  // Ensure that `following` is an array of `Types.ObjectId`
+  const followingIds = currentUser.following.map(
+    (id: any) => new Types.ObjectId(id)
+  );
+
+  // Check if already following using `.some()` and `.equals()`
+  if (!followingIds.some((id: Types.ObjectId) => id.equals(userToFollowId))) {
     // Add to following and followers lists
     currentUser.following.push(userToFollowId); // Add to currentUser's following list
     userToFollow.followers.push(currentUserId); // Add to userToFollow's followers list
