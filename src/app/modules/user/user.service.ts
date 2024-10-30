@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Types } from "mongoose";
+import { Schema, Types } from "mongoose";
 import { UserModel } from "./user.model";
 const getAllUsers = async () => {
   const users = await UserModel.find();
@@ -46,9 +46,13 @@ const followUser = async (followerId: string, userId: string) => {
 
   // Check if already following using `.some()` and `.equals()`
   if (!followingIds.some((id: Types.ObjectId) => id.equals(userToFollowId))) {
-    // Add to following and followers lists
-    currentUser.following.push(userToFollowId); // Add to currentUser's following list
-    userToFollow.followers.push(currentUserId); // Add to userToFollow's followers list
+    // Add to following and followers lists, cast to `Schema.Types.ObjectId`
+    currentUser.following.push(
+      userToFollowId as unknown as Schema.Types.ObjectId
+    ); // Add to currentUser's following list
+    userToFollow.followers.push(
+      currentUserId as unknown as Schema.Types.ObjectId
+    ); // Add to userToFollow's followers list
 
     // Save the changes for both users
     await currentUser.save(); // Save currentUser changes
@@ -83,10 +87,15 @@ const unfollowUser = async (followerId: string, userId: string) => {
   }
 
   // Check if following
-  if (currentUser.following.includes(userToUnfollowId)) {
+  if (currentUser.following.some((id: any) => id.equals(userToUnfollowId))) {
     // Remove from following and followers lists
-    currentUser.following.pull(userToUnfollowId); // Remove from currentUser's following list
-    userToUnfollow.followers.pull(currentUserId); // Remove from userToUnfollow's followers list
+    currentUser.following = currentUser.following.filter(
+      (id: any) => !id.equals(userToUnfollowId)
+    ); // Remove from currentUser's following list
+
+    userToUnfollow.followers = userToUnfollow.followers.filter(
+      (id: any) => !id.equals(currentUserId)
+    ); // Remove from userToUnfollow's followers list
 
     // Save the changes for both users
     await currentUser.save(); // Save currentUser changes
