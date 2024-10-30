@@ -6,4 +6,6 @@ const router = Router();
 
 router.get("/analytics", auth("admin"), ReportController.sevenDaysAnalytics);
 
+router.get("/payment-report", auth("admin"), ReportController.paymentReport);
+
 export const ReportRouters = router;

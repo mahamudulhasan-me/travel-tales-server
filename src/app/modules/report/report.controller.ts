@@ -13,6 +13,18 @@ const sevenDaysAnalytics = asyncHandler(async (req, res) => {
   });
 });
 
+
+const paymentReport = asyncHandler(async (req, res) => {
+  const result = await ReportService.paymentReport();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Data retrieved successfully",
+    data: result,
+  });
+});
+
 export const ReportController = {
   sevenDaysAnalytics,
+  paymentReport
 };
