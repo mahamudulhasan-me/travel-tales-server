@@ -2,7 +2,9 @@ import bcrypt from "bcrypt";
 import { Schema, model } from "mongoose";
 import config from "../../config";
 import { IUser, IUserMethod } from "./user.interface";
-
+const generateRandomPhone = () => {
+  return `+1${Date.now()}${Math.floor(Math.random() * 1000)}`; // Random US phone number format for example
+};
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
@@ -15,11 +17,11 @@ const userSchema = new Schema<IUser>(
       default: "Basic",
       required: true,
     },
-    phone: { type: String, default: "" },
+    phone: { type: String, default: generateRandomPhone() },
     address: { type: String, default: "" },
     profileImage: { type: String, default: "" },
     coverImage: { type: String, default: "" },
-    dateOfBirth: { type: Date, default: Date.now },
+    dateOfBirth: { type: Date, default: "" },
     bio: { type: String, default: "" },
 
     followers: [{ type: Schema.Types.ObjectId, ref: "user" }],

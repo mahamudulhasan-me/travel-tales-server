@@ -121,7 +121,7 @@ const getLast7DaysData = async () => {
 const paymentReport = async () => {
   // Get today's date and calculate the date 7 days ago
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Set the time to the start of the day
+  // today.setHours(0, 0, 0, 0); // Set the time to the start of the day
 
   const sevenDaysAgo = new Date(today);
   sevenDaysAgo.setDate(today.getDate() - 7); // Subtract 7 days
