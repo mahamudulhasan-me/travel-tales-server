@@ -20,10 +20,9 @@ export const paymentInitializer = async (paymentInfo: any) => {
       cus_city: "N/A",
       cus_country: "Bangladesh",
       currency: "BDT",
-      // success_url: `http://localhost:3000/`,
-      success_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=success`,
+      success_url: `https://travel-tales-server.vercel.app/api/payment/confirmation?tran_id=${tran_id}&status=success`,
 
-      fail_url: `http://localhost:1440/api/payment/confirmation?tran_id=${tran_id}&status=failed`,
+      fail_url: `https://travel-tales-server.vercel.app/api/payment/confirmation?tran_id=${tran_id}&status=failed`,
 
       cancel_url: config.client_base_url,
       desc: "N/A",
