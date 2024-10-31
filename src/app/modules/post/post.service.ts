@@ -1,4 +1,7 @@
-import { SortOrder } from "mongoose"; // Import the SortOrder type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { isValidObjectId, SortOrder } from "mongoose"; // Import the SortOrder type
+import AppError from "../../errors/AppError";
+import { UserModel } from "../user/user.model";
 import { IPost } from "./post.interface";
 import PostModel from "./post.model";
 
@@ -14,11 +17,25 @@ const createPost = async (payload: IPost) => {
 };
 
 const getPosts = async (
+  userId: string, // Assuming you're passing the user ID to check their status
   limit: number = 5,
   filterBy: "default" | string = "default",
   sortBy: "default" | "upVote" | "downVote" = "default",
   searchValue?: string
 ): Promise<{ totalPosts: number; posts: IPost[] }> => {
+  // Check if userId is provided and valid
+  if (!userId || !isValidObjectId(userId)) {
+    throw new AppError(401, "This route is not for you.");
+  }
+
+  // First, get the user's status based on their ID
+  const user = await UserModel.findById(userId).select("status");
+
+  // Check if user is found
+  if (!user) {
+    throw new AppError(401, "This route is not for you.");
+  }
+
   // Build filter and sort conditions
   const filterOptions: { [key: string]: any } = {};
 
@@ -36,6 +53,11 @@ const getPosts = async (
     }
   }
 
+  // If the user is not "Premium", exclude premium posts
+  if (user?.status !== "Premium") {
+    filterOptions.isPremium = false; // Non-premium users can only see non-premium posts
+  }
+
   // Build sort condition
   const sortOptions: { [key: string]: SortOrder } = {}; // Use SortOrder type
 
@@ -50,8 +72,10 @@ const getPosts = async (
     }
   }
 
-  const totalPosts = await PostModel.countDocuments(filterOptions); // Get total post count
+  // Get the total count of posts based on the filter options
+  const totalPosts = await PostModel.countDocuments(filterOptions);
 
+  // Fetch the posts with the appropriate filters and sorting
   const posts = await PostModel.find(filterOptions)
     .sort(sortOptions) // Use properly typed sortOptions
     .limit(limit)
